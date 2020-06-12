@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>自动编码</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<!---------------------------- stylesheet zone --------------------------------->
+	<link rel="stylesheet" type="text/css" href="css/bootstrap/bootstrap.min.css" />
+	<link rel="stylesheet" type="text/css" href="css/titatoggle-dist-min.css" />
+    <link rel="stylesheet" type="text/css" href="css/index.css" />
+</head>
+<body>
+	<!-- 导航栏 -->
+	<nav class="navbar navbar-default header" role="navigation" id="navbar">
+		<div class="container-fluid">
+			<!-- 导航栏最左侧的标题栏 -->
+			<div class="navbar-header">
+				<a class="navbar-brand navbar-title" href="#">认知网络分析工具</a>
+			</div>
+			<div>
+				<ul class="nav navbar-nav" id="navigator">
+					<li data-type='encode'><a href="?page=encode">自动编码</a></li>
+					<li data-type='parameter'><a href="?page=parameter">参数设置</a></li>
+					<li data-type='palette'><a href="?page=palette">结果绘制</a></li>
+				</ul>
+			</div>
+
+		</div>
+	</nav>
+
+	<div class="container-fluid" id="mainZone">
+		<div class="row hidden" id="encode-row">
+			<!-- formZone是左侧的表单，tableZone是右侧的表格内容 -->
+			<div id="formZone" class="col-lg-3">
+				<form role="form" method="POST" enctype="multipart/form-data">
+					<div class="form-group">
+						<button id="loaddata" class="btn btn-primary">加载数据</button>
+						<button id="loaddict" class="btn btn-info">加载编码词典</button>
+					</div>
+					<br />
+					<div class="form-group">
+						<button id="encode" class="btn btn-danger">自动编码</button>
+						<button id="uploadencode" class="btn btn-info">上传</button>
+						<input class="hidden" type="file" name="uploadencode" 
+							id="uploadencode-file" />
+					</div>
+				</form>
+			</div>
+			<!-- end formZone -->
+
+			<div id="showZone" class="col-lg-9" >
+				<form>
+					<div class="form-group">
+						<button id="export" class="btn btn-success">下载</button>
+					</div>
+				</form>
+				
+				<div id="tableZone">
+					<table id="table-fixed" class="table table-bordered table-hover hidden">
+						<thead id="thead-fixed"></thead>
+					</table>
+					<div class="table-wrap">
+						<table id="table" class="table table-bordered table-hover hidden">
+							<thead id="thead" style="visibility: hidden;"></thead>
+							<tbody id="tbody"></tbody>
+						</table>
+					</div>
+				</div>
+			</div>
+			<!-- end showZone -->
+		</div>
+
+		<div class="row hidden" id="parameter-row">
+			<div id="parameterZone" class="col-lg-3">
+			<form>
+				<p class="unit-title">分析单元：</p>
+				<div id="parameter-analysisUnit" class="units" data-type="analysisUnit">
+					<div class="form-group unit">
+						<div class="col-sm-10">
+							<select class="form-control analysisUnit-select">
+								<option value=0>请选择</option>
+								<option value=1>classID</option>
+								<option value=2>gpID</option>
+								<option value=3>gpNO</option>
+								<option value=4>userName</option>
+								<option value=5>stageID</option>
+								<option value=6>taskID</option>
+								<option value=7>content</option>
+							</select>
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-danger delete-unit form-control">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group last-unit">
+						<div class="col-sm-2 col-sm-push-10">
+							<button class="btn btn-info add-unit form-control">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<br /><hr />
+				<p class="unit-title">分析话语：</p>
+				<div id="parameter-analysisWords" class="units" data-type="analysisWords">
+					<div class="form-group unit">
+						<div class="col-sm-10">
+							<select class="form-control analysisWords-select">
+								<option value=0>请选择</option>
+								<option value=1>classID</option>
+								<option value=2>gpID</option>
+								<option value=3>gpNO</option>
+								<option value=4>userName</option>
+								<option value=5>stageID</option>
+								<option value=6>taskID</option>
+								<option value=7>content</option>
+							</select>
+						</div>
+						<div class="col-sm-2">
+							<button class="btn btn-danger delete-unit form-control">
+								<span class="glyphicon glyphicon-minus"></span>
+							</button>
+						</div>
+					</div>
+					<div class="form-group last-unit">
+						<div class="col-sm-2 col-sm-push-10">
+							<button class="btn btn-info add-unit form-control">
+								<span class="glyphicon glyphicon-plus"></span>
+							</button>
+						</div>
+					</div>
+				</div>
+
+				<br /><hr />
+				<p class="unit-title">窗口大小：</p>
+				<div id="parameter-windowSize">
+					<div class="form-group">
+						<div class="col-sm-10">
+							<input type="text" class="form-control" data-type='windowSize' value=5>
+						</div>
+					</div>
+				</div>
+
+				<br /><hr />
+				<p class="unit-title">编码维度：</p>
+				<div id="parameter-encodeDimensions">
+					<div class="form-group">
+						<div class="col-sm-12">
+						<ul class="list-group" id="parameter-dimensions">
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>analysis</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>objective</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>context</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>knowledge</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>activity</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>technology</span></label>
+							</div>
+						</li>
+						<li class="list-group-item">
+							<div class="checkbox checkbox-slider--b">
+								<label><input type="checkbox" data-type='encodeDimensions' checked>
+									<span>evaluation</span></label>
+							</div>
+						</li>
+						</ul>
+						</div>
+					</div>
+				</div>
+			</form>
+			</div>
+			<!-- end parameterZone -->
+
+			<div id="rcodeZone" class="col-lg-9">
+				<pre id="rcode-analysisUnit" class="hidden"></pre>
+				<pre id="rcode-analysisWords" class="hidden"></pre>
+				<pre id="rcode-encodeDimensions" class="hidden"></pre>
+				<pre id="rcode-windowSize" class="hidden"></pre>
+			</div>
+			<!-- end rcodeZone -->
+		</div>
+
+		<div class="row hidden" id="palette-row">
+			<h1>Hello World!</h1>
+		</div>
+	</div>
+
+	<!----------------------- script zone ------------------------->
+	<script type="text/javascript" src="js/tool/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="js/tool/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/tool/xlsx.core.min.js"></script>
+	<script type="text/javascript" src="js/tool/jquery-ajax-blob-arraybuffer.js"></script>
+	<script type="text/javascript" src="js/common.js"></script>
+
+	<!-- encode -->
+	<script type="text/javascript" src="js/encode/loadxlsx.js"></script>
+	<script type="text/javascript" src="js/encode/mktable.js"></script>
+	<script type="text/javascript" src="js/encode/dictionary.js"></script>
+	<script type="text/javascript" src="js/encode/encode.js"></script>
+	<script type="text/javascript" src="js/encode/exportxlsx.js"></script>
+	<script type="text/javascript" src="js/encode/upload.js"></script>
+	<script type="text/javascript" src="js/encode/handlers.js"></script>
+
+	<!-- parameter -->
+	<script type="text/javascript" src="js/parameter/dynamic.js"></script>
+	<script type="text/javascript" src="js/parameter/change.js"></script>
+	<script type="text/javascript" src="js/parameter/showcodes.js"></script>
+
+	<script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>	

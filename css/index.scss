@@ -1,0 +1,96 @@
+nav{
+    background-color: #0099CC !important;
+    border-color: #0099CC !important;
+
+    .navbar-title{
+        color: white !important;
+    }
+    .navbar-nav{
+        a{
+            font-weight: bold;
+            color: #333 !important;
+        }
+        li.active a{
+            background-color: white !important;
+        }
+    }
+}
+
+#mainZone{
+    background-color: white;
+    margin-top: -16px;
+}
+
+#formZone{
+    form{
+        padding-top: 45px;
+        height: 665px;
+        box-shadow: 8px 5px 5px #CCC;
+    }
+}
+
+#showZone{
+    padding-top: 15px;
+
+    form{ 
+        margin-left: 90%;
+        height: 45px;
+    }
+
+    #table-fixed{
+        position: absolute;
+        background-color: white;
+    }
+
+    #tableZone .table-wrap{
+        max-height: 595px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    
+        &::-webkit-scrollbar { 
+            display: none; 
+        }
+    
+        .highlightonehot{
+            color: white;
+            background-color: #FF6666;
+            font-weight: bold;
+            font-size: 150%;
+        }
+
+    }
+}
+
+#parameterZone{
+    max-height: 665px;
+    overflow-y: scroll;
+    overflow-x: scroll;
+
+    &::-webkit-scrollbar { 
+        display: none; 
+    }
+
+    .unit-title{
+        font-weight: normal;
+        font-size: 150%;
+    }
+    .unit{
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+    button.delete-unit,
+    button.add-unit{
+        width: 40px;
+        margin-left: -20px;
+    }
+}
+
+#rcodeZone{
+    padding-top: 15px;
+
+    pre{
+        b{
+            color: #CC3333;
+        }
+    }
+}
