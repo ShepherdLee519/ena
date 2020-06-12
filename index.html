@@ -35,13 +35,45 @@
 			<div id="formZone" class="col-lg-3">
 				<form role="form" method="POST" enctype="multipart/form-data">
 					<div class="form-group">
-						<button id="loaddata" class="btn btn-primary">加载数据</button>
-						<button id="loaddict" class="btn btn-info">加载编码词典</button>
+						<div class="btn-group">
+							<button id="loaddata" class="btn btn-primary">加载数据</button>
+							<button id="filterdata" class="btn btn-info" 
+								data-toggle="collapse" href="#filterForm">
+								<span class="glyphicon glyphicon-filter"></span>
+							</button>
+						</div>
+						<button id="uploaddata" class="btn btn-info">上传数据</button>
+						<input class="hidden" type="file" name="uploaddata" 
+							id="uploaddata-file" />
+					</div>
+					<!-- filter form -->
+					<div id="filterForm" class="panel-collapse collapse">
+						<div class="panel-body">
+							<div class="form-group">
+								<label class="control-label">筛选班级：</label>
+								<select class="form-control" id="filterClass">
+									<option value=0>All</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label class="control-label">筛选小组：</label>
+								<select class="form-control" id="filterGroup">
+									<option value=0>All</option>
+								</select>
+							</div>
+						</div>
+					</div>
+					<br />
+					<div class="form-group">
+						<button id="loaddictionary" class="btn btn-primary">加载编码词典</button>
+						<button id="uploaddictionary" class="btn btn-info">上传编码词典</button>
+						<input class="hidden" type="file" name="uploaddictionary" 
+							id="uploaddictionary-file" />
 					</div>
 					<br />
 					<div class="form-group">
 						<button id="encode" class="btn btn-danger">自动编码</button>
-						<button id="uploadencode" class="btn btn-info">上传</button>
+						<button id="uploadencode" class="btn btn-info">上传编码结果</button>
 						<input class="hidden" type="file" name="uploadencode" 
 							id="uploadencode-file" />
 					</div>
@@ -228,6 +260,7 @@
 	<script type="text/javascript" src="js/encode/dictionary.js"></script>
 	<script type="text/javascript" src="js/encode/encode.js"></script>
 	<script type="text/javascript" src="js/encode/exportxlsx.js"></script>
+	<script type="text/javascript" src="js/encode/filter.js"></script>
 	<script type="text/javascript" src="js/encode/upload.js"></script>
 	<script type="text/javascript" src="js/encode/handlers.js"></script>
 

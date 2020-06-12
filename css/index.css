@@ -17,6 +17,16 @@ nav {
   padding-top: 45px;
   height: 665px;
   box-shadow: 8px 5px 5px #CCC; }
+#formZone #loaddata {
+  width: 85px; }
+#formZone #filterdata {
+  width: 40px; }
+#formZone #loaddictionary,
+#formZone #encode {
+  width: 125px; }
+#formZone button[id^='upload'] {
+  width: 130px;
+  margin-left: 8px; }
 
 #showZone {
   padding-top: 15px; }
@@ -40,10 +50,7 @@ nav {
 
 #parameterZone {
   max-height: 665px;
-  overflow-y: scroll;
-  overflow-x: scroll; }
-  #parameterZone::-webkit-scrollbar {
-    display: none; }
+  overflow-y: scroll; }
   #parameterZone .unit-title {
     font-weight: normal;
     font-size: 150%; }

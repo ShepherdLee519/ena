@@ -27,6 +27,22 @@ nav{
         height: 665px;
         box-shadow: 8px 5px 5px #CCC;
     }
+
+    #loaddata{
+        width: 85px;
+    }
+    #filterdata{
+        width: 40px;
+    }
+    #loaddictionary,
+    #encode{
+        width: 125px;
+    }
+
+    button[id^='upload']{
+        width: 130px;
+        margin-left: 8px;
+    }
 }
 
 #showZone{
@@ -64,11 +80,11 @@ nav{
 #parameterZone{
     max-height: 665px;
     overflow-y: scroll;
-    overflow-x: scroll;
+    // overflow-x: scroll;
 
-    &::-webkit-scrollbar { 
-        display: none; 
-    }
+    // &::-webkit-scrollbar { 
+    //     display: none; 
+    // }
 
     .unit-title{
         font-weight: normal;

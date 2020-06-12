@@ -1,3 +1,10 @@
+var DATA = []; // 全局的读入的 xlsx 的数据
+var DICT = []; // 全局的读入的编码规则数据
+var ENCODE = []; // 全局的编码后的数据
+var TARGET; // 当前需显示的数据对象
+var TYPE; // 当前显示的数据类型
+
+
 /**
  * ajax 加载xlsx文件
  * 
@@ -6,9 +13,9 @@
  */
 function loadXLSX(xlsx_path, type = 'data') {
     if (type == 'data' && DATA.length) {
-        TARGET = DATA;
-        trigger('loadXLSX_finish');
-        return;
+        // TARGET = DATA;
+        // trigger('loadXLSX_finish');
+        // return;
     } else if (type == 'dictionary' && DICT.length) {
         TARGET = DICT;
         trigger('loadXLSX_finish');
@@ -24,6 +31,7 @@ function loadXLSX(xlsx_path, type = 'data') {
         },
         error: err => {
             console.error(err);
+            alert('所需文件尚未上传！');
         }
     });
 }
@@ -70,7 +78,8 @@ function readXLSX(file, type) {
         console.log(rows.length);
         if (type == 'data') {
             DATA = rows;
-            TARGET = DATA;
+            // TARGET = DATA;
+            TARGET = filterData(DATA);
         } else if (type == 'dictionary') {
             DICT = rows;
             initDictionary();

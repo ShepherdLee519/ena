@@ -18,7 +18,10 @@ function upload(type) {
             data: formData, cache: false, dataType: 'json',
             contentType: false, processData: false,
             success: function(res) {
-                if (res) alert('上传成功!');
+                if (res) {
+                    alert('上传成功!');
+                    if (type === 'data') resetFilterOptions();
+                }
                 else alert('发生问题，请重新尝试!');
             }
         }); // end ajax

@@ -1,3 +1,11 @@
+const $table = $('#table');
+const $thead = $('#thead');
+const $tbody = $('#tbody');
+const $tableFixed = $('#table-fixed');
+const $theadFixed = $('#thead-fixed');
+const LIMIT = 100; // 显示的数据范围
+
+
 // 关于表格显示的一些设置
 var tableConfig = {
     showIndex: false, // 是否显示Index
@@ -28,7 +36,8 @@ function mkTable(type) {
     mkTbody(keys);
 
     // 对编码显示的额外处理
-    if(type == 'encode') highlightOneHot();
+    if (type == 'data') initFilterOptions();
+    if (type == 'encode') highlightOneHot();
 }
 
 /**
