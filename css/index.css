@@ -1,3 +1,15 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:20:53 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 13:38:38
+ */
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:58 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 13:29:34
+ */
 nav {
   background-color: #0099CC !important;
   border-color: #0099CC !important; }
@@ -13,18 +25,24 @@ nav {
   background-color: white;
   margin-top: -16px; }
 
-#formZone form {
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:18 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 14:20:24
+ */
+#buttonZone form {
   padding-top: 45px;
   height: 665px;
   box-shadow: 8px 5px 5px #CCC; }
-#formZone #loaddata {
+#buttonZone #loaddata {
   width: 85px; }
-#formZone #filterdata {
+#buttonZone #filterdata {
   width: 40px; }
-#formZone #loaddictionary,
-#formZone #encode {
+#buttonZone #loaddictionary,
+#buttonZone #encode {
   width: 125px; }
-#formZone button[id^='upload'] {
+#buttonZone button[id^='upload'] {
   width: 130px;
   margin-left: 8px; }
 
@@ -48,6 +66,12 @@ nav {
       font-weight: bold;
       font-size: 150%; }
 
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:13 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 13:38:14
+ */
 #parameterZone {
   max-height: 665px;
   overflow-y: scroll; }
@@ -66,5 +90,25 @@ nav {
   padding-top: 15px; }
   #rcodeZone pre b {
     color: #CC3333; }
+
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:04 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 00:16:03
+ */
+#treeZone {
+  max-height: 665px;
+  overflow-y: scroll; }
+  #treeZone li:hover {
+    background-color: #EFEFEF !important; }
+  #treeZone .indent {
+    padding-left: 40px; }
+  #treeZone .toggle-target {
+    padding-right: 5px; }
+  #treeZone .pull-right {
+    padding-right: 5px; }
+    #treeZone .pull-right.unactive {
+      color: #CCC; }
 
 /*# sourceMappingURL=index.css.map */

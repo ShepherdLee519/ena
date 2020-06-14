@@ -1,14 +1,26 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 17:29:01 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 17:33:43
+ */
+
+/*
+ * 导出xlsx类型的事件处理逻辑，具体调用见handlers.js中的事件绑定
+ */
+
+
 /**
  * 导出 xlsx 的事件处理
  */
 function exportXLSX() {
-    if (TYPE === void 0) {
+    if (isundef(TYPE)) {
         alert('请先选择显示的表格！');
         return;
     }
 
     // 将一个table对象转换成一个sheet对象
-    const sheet = XLSX.utils.table_to_sheet( $table[0] );
+    const sheet = XLSX.utils.table_to_sheet( $table[0] ); // $table 见mktable.js
     openDownloadDialog(sheet2blob(sheet), `${TYPE}.xlsx`);
 }
 
@@ -16,7 +28,8 @@ function exportXLSX() {
  * 将sheet对象再转为二进制的Blob对象
  * 
  * @param {Object} sheet table_to_sheet生成的sheet对象 
- * @param {*} sheetName = 'sheet1' sheet的名字
+ * @param {String} sheetName = 'sheet1' sheet的名字
+ * @returns blob
  */
 function sheet2blob(sheet, sheetName = 'sheet1') {
     const workbook = {
@@ -28,7 +41,7 @@ function sheet2blob(sheet, sheetName = 'sheet1') {
 
     const wopts = {
         bookType: 'xlsx', // 生成的文件类型
-        bookSST: false, // 是否生成Shared String Table，如果开启生成速度会下降，但在低版本IOS设备上有更好的兼容性
+        bookSST: false, // 是否生成Shared String Table，如果开启生成速度会下降，但有更好的兼容性
         type: 'binary'
     };
     const wbout = XLSX.write(workbook, wopts);
@@ -52,7 +65,7 @@ function sheet2blob(sheet, sheetName = 'sheet1') {
  * 生成下载对话，下载该xlsx文件
  * 
  * @param {Blob} url xlsx对应的Blob对象 
- * @param {String} saveName 保存的文件名 
+ * @param {String} saveName = 'export.xlsx' 保存的文件名 
  */
 function openDownloadDialog(url, saveName = 'export.xlsx') {
     if (typeof url == 'object' && url instanceof Blob) {
@@ -61,5 +74,5 @@ function openDownloadDialog(url, saveName = 'export.xlsx') {
     const aLink = document.createElement('a');
     aLink.href = url;
     aLink.download = saveName; // HTML5新增的属性，指定保存文件名，可以不要后缀
-    aLink.click();
+    aLink.click(); // 触发下载对话框，样式依浏览器
 }

@@ -1,3 +1,99 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 17:13:08 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 20:29:53
+ */
+
+/* 自定义的辅助函数:
+ *
+ * isundef()
+ * exClass()
+ * replaceClass()
+ * hide() - show()
+ * delegate()
+ * listen() - trigger()
+ * multistep()
+ * getQuery() - saveQuery()
+ * saveLocation() - toLocation()
+ */
+
+
+/*----------------对象相关-------------------*/
+/**
+ * 判断某个js对象是否为undefined的简写
+ * 
+ * @param {Object} target 检查对象
+ * @returns {Boolean} true-是undefined
+ */
+function isundef(target) {
+    return target === void 0;
+}
+
+/*----------------样式相关-------------------*/
+/**
+ * 交换两个对象的某个类 结果只有其中一个对象有目标类
+ * 
+ * @param {Object} $nodeA jQuery对象 
+ * @param {Object} $nodeB jQuery对象 
+ * @param {String} classname 
+ */
+function exClass( $nodeA, $nodeB, classname ) {
+    if ( $nodeA.hasClass(classname) ){
+        $nodeA.removeClass(classname);
+        $nodeB.addClass(classname);
+    } else if ( $nodeB.hasClass(classname) ) {
+        $nodeB.removeClass(classname);
+        $nodeA.addClass(classname);
+    }
+}
+
+/**
+ * 目标对象删去A类 换上B类
+ * 
+ * @param {Object} $node jQuery对象
+ * @param {String} classA
+ * @param {String} classB
+ */
+function replaceClass( $node, classA, classB ) {
+    $node.removeClass(classA).addClass(classB);
+}
+
+/**
+ * addClass("hidden") 的简写\
+ * 可适用于节点数组 - 默认传入jQuery对象
+ * 
+ * @param {Object} $node 
+ */
+function hide( $node ) {
+    if ( !Array.isArray( $node ) ) {
+        $node.addClass('hidden');
+    } else {
+        $node.forEach( $target => {
+            $target.addClass('hidden');
+        });
+    }
+    return { show: show };
+}
+
+/**
+ * removeClass("hidden") 的简写\
+ * 可适用于节点数组 - 默认传入jQuery对象
+ * 
+ * @param {Object} $node 
+ */
+function show( $node ) {
+    if ( !Array.isArray( $node ) ) {
+        $node.removeClass('hidden');
+    } else {
+        $node.forEach( $target => {
+            $target.removeClass('hidden');
+        });
+    }
+    return { hide: hide };
+}
+
+/*----------------事件相关-------------------*/
 /**
  * 在指定对象上委托多个事件的简写
  * 
@@ -10,7 +106,7 @@
  * @param {Object} $target 
  * @param {Object} handlerObjs - target/event/handler
  */
-function delegate($target, handlerObjs) {
+function delegate( $target, handlerObjs ) {
     handlerObjs = ( !Array.isArray(handlerObjs) ) ? 
         [handlerObjs] : handlerObjs;
     
@@ -53,6 +149,22 @@ function trigger(eventType, hold = false) {
     if ( !hold ) $(document).unbind(eventType);
 }
 
+/*----------------事件相关-------------------*/
+/**
+ * 分割任务异步调用的公用方法
+ * 
+ * @param {Array<Function>} steps 调用的函数数组
+ * @param {Array<Array<*>>} argsArray 每个函数对应的参数列表的数组
+ */
+function multistep(steps, argsArray = []) {
+    for (let i = 0, len = steps.length; i < len; i++) {
+        setTimeout(function(){
+            steps[i].apply(null, argsArray[i] || []);
+        }, 25);
+    }
+}
+
+/*----------------URL相关-------------------*/
 /**
  * 根据变量名查询querystring值\
  * 默认情况下(无变量名)返回querystring的键值对对象
@@ -125,7 +237,7 @@ function saveLocation(refresh, querystring, data = null) {
  * 
  * @example
  * //http://localhost/AniNavi/index.php?page=1&year=2020&month=1
- * _toLocation({page:1, year:2020, month:1})
+ * toLocation({page:1, year:2020, month:1})
  * @param {Array<Object>} queryObj querystring对象
  * @param {Boolean} refresh = false 默认不刷新
  */

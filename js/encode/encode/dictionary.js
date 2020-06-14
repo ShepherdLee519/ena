@@ -1,12 +1,26 @@
-var dict_single = [];
-var dict_complex = [];
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 17:38:35 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 17:46:39
+ */
+
+/*
+ * 初始化本地编码词典的事件处理\
+ * 主要逻辑调用于readXLSX(from loadxlsx.js)中读入dictionary数据时 
+ */
+
+
+var dict_single = []; // 单关键词编码词典
+var dict_complex = []; // 复合关键词编码词典
 
 
 /**
- * 初始化本地的编码词典数组
+ * 初始化本地的编码词典数组\
+ * 调用于loadxlsx.js -> readXLSX
  */
 function initDictionary() {
-    initDimension();
+    initDimension(); // 详见encode.js
     for (let i = 0; i < DICT.length; i++) {
         let words = DICT[i]['关键词'];
         
@@ -30,7 +44,7 @@ function initDictionary() {
 } 
 
 /**
- * 处理复杂规则
+ * 处理复杂关键词
  * 
  * @param {String} word 复杂文本规则，eg."aa+bb/cc" 
  * @param {Number} index 该规则对应的维度位置 
@@ -46,11 +60,12 @@ function dealWithComplexWord(word, index) {
 	    }
     }
     // eg. aa+bb/cc+dd/ee/ff => pos = [1, 2, 3];
-    let pos = Array.from(Array(words.length), (v,k) => words[k].length);
+    let pos = Array.from(Array(words.length), (_,k) => words[k].length);
     // indexes 里为元素坐标的全排列 eg. [[0,0,0], [0,0,1] ...];
     let indexes = [];
     initIndexes(indexes, pos, 0);
 
+    // 根据全排列下标数组，组装可能的关键字排列组合
     for (let i = 0; i < indexes.length; i++) {
     	let arr = [];
     	for (let j = 0; j < pos.length; j++) {
@@ -69,13 +84,15 @@ function dealWithComplexWord(word, index) {
  * @param {String} temp 下标组成的字符串 
  */
 function initIndexes(indexes, pos, index, temp = '') {
+    // 基础条件 当前处理的下标位到达最后
 	if (index == pos.length) {
 		let arr = temp.split('+');
-		arr.pop();
+		arr.pop(); // 去除最末的''空字符串
 		indexes.push(arr);
 		return;
 	}
 
+    // 递归选择全排列中的下一位数字
 	for (let i = 0; i < pos[index]; i++) {
 		initIndexes(indexes, pos, index + 1, temp + `${i}+`);
 	}

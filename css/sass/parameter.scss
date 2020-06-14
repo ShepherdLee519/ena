@@ -1,0 +1,42 @@
+@charset "utf-8";
+
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:13 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 13:38:14
+ */
+
+#parameterZone{
+    max-height: 665px;
+    overflow-y: scroll;
+    // overflow-x: scroll;
+
+    // &::-webkit-scrollbar { 
+    //     display: none; 
+    // }
+
+    .unit-title{
+        font-weight: normal;
+        font-size: 150%;
+    }
+    .unit{
+        padding-top: 8px;
+        padding-bottom: 24px;
+    }
+    button.delete-unit,
+    button.add-unit{
+        width: 40px;
+        margin-left: -20px;
+    }
+}
+
+#rcodeZone{
+    padding-top: 15px;
+
+    pre{
+        b{
+            color: #CC3333;
+        }
+    }
+}

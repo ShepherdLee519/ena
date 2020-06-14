@@ -1,9 +1,20 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 17:19:51 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 17:28:20
+ */
+
+/*
+ * 读入xlsx文件的逻辑实现，具体调用见handlers.js中的事件绑定
+ */
+
+
 var DATA = []; // 全局的读入的 xlsx 的数据
 var DICT = []; // 全局的读入的编码规则数据
 var ENCODE = []; // 全局的编码后的数据
 var TARGET; // 当前需显示的数据对象
 var TYPE; // 当前显示的数据类型
-
 
 /**
  * ajax 加载xlsx文件
@@ -12,11 +23,7 @@ var TYPE; // 当前显示的数据类型
  * @param {String} type = 'data' 读入的是数据还是编码词典
  */
 function loadXLSX(xlsx_path, type = 'data') {
-    if (type == 'data' && DATA.length) {
-        // TARGET = DATA;
-        // trigger('loadXLSX_finish');
-        // return;
-    } else if (type == 'dictionary' && DICT.length) {
+    if (type == 'dictionary' && DICT.length) {
         TARGET = DICT;
         trigger('loadXLSX_finish');
         return;
@@ -25,7 +32,7 @@ function loadXLSX(xlsx_path, type = 'data') {
     $.ajax({
         url: xlsx_path,
         type: 'GET',
-        dataType: 'blob',
+        dataType: 'blob', // 原始数据类文件对象
         success: res => {
             readXLSX(res, type);
         },
@@ -67,22 +74,21 @@ function readXLSX(file, type) {
         for (let sheet in workbook.Sheets) {
             if (workbook.Sheets.hasOwnProperty(sheet)) {
                 fromTo = workbook.Sheets[sheet]['!ref'];
-                console.log(fromTo);
+                console.log('ReadXLSX fromTo:', fromTo); // eg. A1:H9691
                 rows = rows.concat(XLSX.utils.sheet_to_json(workbook.Sheets[sheet]));
                 break; // 默认只读取第一张表
             }
         }
 
-        // 在控制台打印出来表格中的数据
-        console.log(rows);
-        console.log(rows.length);
+        // 在控制台打印出来表格中的数据长度
+        // console.log(rows);
+        console.log('Data Length: ', rows.length);
         if (type == 'data') {
             DATA = rows;
-            // TARGET = DATA;
-            TARGET = filterData(DATA);
+            TARGET = filterData(DATA); // 按筛选条件过滤后的数据 见filter.js
         } else if (type == 'dictionary') {
             DICT = rows;
-            initDictionary();
+            initDictionary(); // 初始化编码词典对象 见dictionary.js
             TARGET = DICT;
         }
         trigger('loadXLSX_finish');

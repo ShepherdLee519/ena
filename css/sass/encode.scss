@@ -1,0 +1,64 @@
+@charset "utf-8";
+
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:18 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 14:20:24
+ */
+
+#buttonZone{
+    form{
+        padding-top: 45px;
+        height: 665px;
+        box-shadow: 8px 5px 5px #CCC;
+    }
+
+    #loaddata{
+        width: 85px;
+    }
+    #filterdata{
+        width: 40px;
+    }
+    #loaddictionary,
+    #encode{
+        width: 125px;
+    }
+
+    button[id^='upload']{
+        width: 130px;
+        margin-left: 8px;
+    }
+}
+
+#showZone{
+    padding-top: 15px;
+
+    form{ 
+        margin-left: 90%;
+        height: 45px;
+    }
+
+    #table-fixed{
+        position: absolute;
+        background-color: white;
+    }
+
+    #tableZone .table-wrap{
+        max-height: 595px;
+        overflow-y: scroll;
+        overflow-x: scroll;
+    
+        &::-webkit-scrollbar { 
+            display: none; 
+        }
+    
+        .highlightonehot{
+            color: white;
+            background-color: #FF6666;
+            font-weight: bold;
+            font-size: 150%;
+        }
+
+    }
+}

@@ -1,5 +1,17 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 20:14:41 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 20:20:55
+ */
+
+/*
+ * 显示对应R代码的实现 
+ */
+
+
 $(function() {
-    initShowCodes();
+    initShowCodes(); // 初始化代码区域的显示
 });
 
 /**
@@ -13,12 +25,14 @@ function showCodes(type, ...paras) {
     let str = '', values = [];
 
     switch(type) {
+        // 分析单元
         case 'analysisUnit': 
             [...$('#parameter-analysisUnit').find('select')].forEach(select => {
                 values.push(`"${$(select).find('option:selected').html()}"`);
             });
+            // 跳过"请选择"的情况
             if (values.length == 1 && values[0] === '"请选择"') {
-                $target.addClass('hidden');
+                hide( $target );
                 return;
             } 
             str +=
@@ -26,12 +40,14 @@ function showCodes(type, ...paras) {
             `units = <b>STEM.data[,c(${values.join(',')})]</b>\n` +
             'head(units)';
             break;
+        // 分析话语
         case 'analysisWords':
             [...$('#parameter-analysisWords').find('select')].forEach(select => {
                 values.push(`"${$(select).find('option:selected').html()}"`);
             });
+            // 跳过"请选择"的情况
             if (values.length == 1 && values[0] === '"请选择"') {
-                $target.addClass('hidden');
+                hide( $target );
                 return;
             } 
             str += 
@@ -39,6 +55,7 @@ function showCodes(type, ...paras) {
             `conversation = <b>STEM.data[,c(${values.join(',')})]</b>\n` +
             'head(conversation)';
             break;
+        // 窗口大小
         case 'windowSize':
             str += 
             `#计算累计邻接向量，定义节的大小是<b>${paras[0]}</b>行\n` +
@@ -49,6 +66,7 @@ function showCodes(type, ...paras) {
             `   <b>window.size.back = ${paras[0]}</b>\n` +
             ')';
             break;
+        // 编码维度
         case 'encodeDimensions':
             [...$('#parameter-encodeDimensions').find('input')].forEach(checkbox => {
                 if (  $(checkbox).prop('checked') ) {
@@ -70,11 +88,13 @@ function showCodes(type, ...paras) {
     }
 
     $target.html(str);
-    $target.removeClass('hidden');
+    show( $target );
 }
 
+/**
+ * 根据已选择的默认值，初始化代码显示区域
+ */
 function initShowCodes() {
-    let value;
     // 1. analysisUnit
     if( $('#parameter-analysisUnit').find('option:selected').length ) {
         showCodes('analysisUnit');
@@ -86,7 +106,7 @@ function initShowCodes() {
     }
 
     // 3. windowSize
-    value = $('#parameter-windowSize input').val();
+    let value = $('#parameter-windowSize input').val();
     if (value) showCodes('windowSize', value);
 
     // 4. encodeDimensions

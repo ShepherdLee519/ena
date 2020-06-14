@@ -1,0 +1,31 @@
+@charset "utf-8";
+
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:58 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-13 13:29:34
+ */
+
+nav{
+    background-color: #0099CC !important;
+    border-color: #0099CC !important;
+
+    .navbar-title{
+        color: white !important;
+    }
+    .navbar-nav{
+        a{
+            font-weight: bold;
+            color: #333 !important;
+        }
+        li.active a{
+            background-color: white !important;
+        }
+    }
+}
+
+#mainZone{
+    background-color: white;
+    margin-top: -16px;
+}

@@ -1,20 +1,33 @@
-// 关于编码时候的一些配置
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 17:47:14 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 18:02:06
+ */
+
+/*
+ * 与自动编码有关的逻辑处理，具体调用见handlers.js中的事件绑定
+ */
+
+
+// 关于编码时候的一些全局配置
 var encodeConfig = {
-    pass: ['timeStamp', 'actionType'],
+    pass: ['timeStamp', 'actionType'], // 编码结果无视这些字段
     dimensions: [] // 编码维度
 }
 
 
 /**
- * 点击编码后的事件处理
+ * 点击编码后进行自动编码的事件处理
  */
 function autoEncode() {
     if (DATA.length == 0 || DICT.length == 0) return;
 
     let goals; // 存储 one-hot 数组
-    let len = (DATA.length <= LIMIT) ? DATA.length : LIMIT;
+    let dictLen = DICT.length; // 编码维度数量
+    let len = (DATA.length <= LIMIT) ? DATA.length : LIMIT; // 待编码的数据量
     for (let i = 0; i < len; i++) {
-        goals = Array.from(Array(7), (v,k) => 0);
+        goals = Array.from(Array(dictLen), (_) => 0);
         let row = DATA[i];
         encodeRow(row['Content'], goals); // 编码，调整goals
         ENCODE.push(initEncodeRow(row, goals));
@@ -23,7 +36,7 @@ function autoEncode() {
     }
 
     TARGET = ENCODE;
-    mkTable('encode');
+    mkTable('encode'); // 绘制编码结果
 }
 
 /**
@@ -39,7 +52,7 @@ function encodeRow(content, goals) {
 
     for (let i = 0; i < len; i++) {
         // Step 1. 根据 dict_single 进行编码
-        // flag 为 true 表示当前编码为1，因尽早结束冗余的编码过程
+        // flag 为 true 表示当前编码为1，应尽早结束冗余的编码过程
 		let flag = false;
 		if (dict_single[i].length) {
 			for (let j = 0; j < dict_single[i].length && !flag; j++) {
@@ -71,6 +84,7 @@ function encodeRow(content, goals) {
  * 
  * @param {Object} row 原始的行数据 
  * @param {Array<Number>} goals 编码后的one-hot数组 
+ * @returns row
  */
 function initEncodeRow(row, goals) {
     for (let i = 0; i < goals.length; i++) {

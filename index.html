@@ -31,55 +31,55 @@
 
 	<div class="container-fluid" id="mainZone">
 		<div class="row hidden" id="encode-row">
-			<!-- formZone是左侧的表单，tableZone是右侧的表格内容 -->
-			<div id="formZone" class="col-lg-3">
-				<form role="form" method="POST" enctype="multipart/form-data">
-					<div class="form-group">
-						<div class="btn-group">
-							<button id="loaddata" class="btn btn-primary">加载数据</button>
-							<button id="filterdata" class="btn btn-info" 
-								data-toggle="collapse" href="#filterForm">
-								<span class="glyphicon glyphicon-filter"></span>
-							</button>
+			<!-- buttonZone是左侧的按钮，tableZone是右侧的表格内容 -->
+			<div id="buttonZone" class="col-lg-3">
+			<form role="form" method="POST" enctype="multipart/form-data">
+				<div class="form-group">
+					<div class="btn-group">
+						<button id="loaddata" class="btn btn-primary">加载数据</button>
+						<button id="filterdata" class="btn btn-info" 
+							data-toggle="collapse" href="#filterForm">
+							<span class="glyphicon glyphicon-filter"></span>
+						</button>
+					</div>
+					<button id="uploaddata" class="btn btn-info">上传数据</button>
+					<input class="hidden" type="file" name="uploaddata" 
+						id="uploaddata-file" />
+				</div>
+				<!-- filter form -->
+				<div id="filterForm" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div class="form-group">
+							<label class="control-label">筛选班级：</label>
+							<select class="form-control" id="filterClass">
+								<option value=0>All</option>
+							</select>
 						</div>
-						<button id="uploaddata" class="btn btn-info">上传数据</button>
-						<input class="hidden" type="file" name="uploaddata" 
-							id="uploaddata-file" />
-					</div>
-					<!-- filter form -->
-					<div id="filterForm" class="panel-collapse collapse">
-						<div class="panel-body">
-							<div class="form-group">
-								<label class="control-label">筛选班级：</label>
-								<select class="form-control" id="filterClass">
-									<option value=0>All</option>
-								</select>
-							</div>
-							<div class="form-group">
-								<label class="control-label">筛选小组：</label>
-								<select class="form-control" id="filterGroup">
-									<option value=0>All</option>
-								</select>
-							</div>
+						<div class="form-group">
+							<label class="control-label">筛选小组：</label>
+							<select class="form-control" id="filterGroup">
+								<option value=0>All</option>
+							</select>
 						</div>
 					</div>
-					<br />
-					<div class="form-group">
-						<button id="loaddictionary" class="btn btn-primary">加载编码词典</button>
-						<button id="uploaddictionary" class="btn btn-info">上传编码词典</button>
-						<input class="hidden" type="file" name="uploaddictionary" 
-							id="uploaddictionary-file" />
-					</div>
-					<br />
-					<div class="form-group">
-						<button id="encode" class="btn btn-danger">自动编码</button>
-						<button id="uploadencode" class="btn btn-info">上传编码结果</button>
-						<input class="hidden" type="file" name="uploadencode" 
-							id="uploadencode-file" />
-					</div>
-				</form>
+				</div>
+				<br />
+				<div class="form-group">
+					<button id="loaddictionary" class="btn btn-primary">加载编码词典</button>
+					<button id="uploaddictionary" class="btn btn-info">上传编码词典</button>
+					<input class="hidden" type="file" name="uploaddictionary" 
+						id="uploaddictionary-file" />
+				</div>
+				<br />
+				<div class="form-group">
+					<button id="encode" class="btn btn-danger">自动编码</button>
+					<button id="uploadencode" class="btn btn-info">上传编码结果</button>
+					<input class="hidden" type="file" name="uploadencode" 
+						id="uploadencode-file" />
+				</div>
+			</form>
 			</div>
-			<!-- end formZone -->
+			<!-- end buttonZone -->
 
 			<div id="showZone" class="col-lg-9" >
 				<form>
@@ -102,8 +102,10 @@
 			</div>
 			<!-- end showZone -->
 		</div>
+		<!-- end encode-row -->
 
 		<div class="row hidden" id="parameter-row">
+			<!-- parameterZone是左侧设置参数的表单区域，rcodeZone是右侧显示对应R代码的区域 -->
 			<div id="parameterZone" class="col-lg-3">
 			<form>
 				<p class="unit-title">分析单元：</p>
@@ -241,33 +243,54 @@
 			</div>
 			<!-- end rcodeZone -->
 		</div>
+		<!-- end parameter-row -->
 
 		<div class="row hidden" id="palette-row">
-			<h1>Hello World!</h1>
+			<!-- treeZone是左侧的树状控件的区域，plotZone是右侧的绘图区域 -->
+			<div id="treeZone" class="col-lg-3">
+				
+			</div>
+			<!-- end treeZone -->
+
+			<div id="plotZone" class="col-lg-9">
+			</div>
+			<!-- end plotZone -->
 		</div>
+		<!-- end palette-row -->
 	</div>
 
 	<!----------------------- script zone ------------------------->
+	<!-- tools -->
 	<script type="text/javascript" src="js/tool/jquery-3.3.1.min.js"></script>
     <script type="text/javascript" src="js/tool/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/tool/xlsx.core.min.js"></script>
 	<script type="text/javascript" src="js/tool/jquery-ajax-blob-arraybuffer.js"></script>
+
 	<script type="text/javascript" src="js/common.js"></script>
 
 	<!-- encode -->
-	<script type="text/javascript" src="js/encode/loadxlsx.js"></script>
-	<script type="text/javascript" src="js/encode/mktable.js"></script>
-	<script type="text/javascript" src="js/encode/dictionary.js"></script>
-	<script type="text/javascript" src="js/encode/encode.js"></script>
-	<script type="text/javascript" src="js/encode/exportxlsx.js"></script>
-	<script type="text/javascript" src="js/encode/filter.js"></script>
-	<script type="text/javascript" src="js/encode/upload.js"></script>
+	<script type="text/javascript" src="js/encode/xlsx/loadxlsx.js"></script>
+	<script type="text/javascript" src="js/encode/xlsx/exportxlsx.js"></script>
+	<script type="text/javascript" src="js/encode/xlsx/upload.js"></script>
+
+	<script type="text/javascript" src="js/encode/encode/dictionary.js"></script>
+	<script type="text/javascript" src="js/encode/encode/encode.js"></script>
+	
+	<script type="text/javascript" src="js/encode/show/filter.js"></script>
+	<script type="text/javascript" src="js/encode/show/mktable.js"></script>
+
 	<script type="text/javascript" src="js/encode/handlers.js"></script>
 
 	<!-- parameter -->
-	<script type="text/javascript" src="js/parameter/dynamic.js"></script>
-	<script type="text/javascript" src="js/parameter/change.js"></script>
-	<script type="text/javascript" src="js/parameter/showcodes.js"></script>
+	<script type="text/javascript" src="js/parameter/form/dynamic.js"></script>
+	<script type="text/javascript" src="js/parameter/form/change.js"></script>
+
+	<script type="text/javascript" src="js/parameter/rcode/showcodes.js"></script>
+
+	<!-- palette -->
+	<script type="text/javascript" src="js/palette/tree/treeview.js"></script>
+	<script type="text/javascript" src="js/palette/tree/treedata.js"></script>
+	<script type="text/javascript" src="js/palette/tree/treehandlers.js"></script>
 
 	<script type="text/javascript" src="js/index.js"></script>
 </body>

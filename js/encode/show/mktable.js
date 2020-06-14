@@ -1,3 +1,15 @@
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-14 18:07:44 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-14 18:16:41
+ */
+
+/*
+ * 绘制xlsx数据对应的html表格的逻辑实现
+ */
+
+
 const $table = $('#table');
 const $thead = $('#thead');
 const $tbody = $('#tbody');
@@ -12,6 +24,7 @@ var tableConfig = {
     pass: [] // 无视这些属性
 };
 
+
 /**
  * 清空 table 中的内容
  */
@@ -22,22 +35,22 @@ function clsTable() {
 }
 
 /**
- * 根据 DATA 中的全局xlsx数据，初始化table
+ * 根据 DATA 中的全局xlsx数据，初始化table\
+ * 在loadXLSX_finish事件触发后调用(即xlsx成功读入后)
  * 
  * @param {String} type 当期显示的数据类型 data/dictionary/encode 
  */
 function mkTable(type) {
     clsTable(); // 清空表格内容
-    $table.removeClass('hidden');
-    $tableFixed.removeClass('hidden');
+    show([ $table, $tableFixed ]);
     TYPE = type; // 保存当前所显示的数据对象类型
     console.log('mktable: ', TARGET.length); 
-    let keys = mkThead();
+    const keys = mkThead(); // 表头数组
     mkTbody(keys);
 
-    // 对编码显示的额外处理
-    if (type == 'data') initFilterOptions();
-    if (type == 'encode') highlightOneHot();
+    // 表格绘制成功后的额外处理
+    if (type == 'data') initFilterOptions(); // 初始化筛选选项
+    if (type == 'encode') highlightOneHot(); // 高亮one-hot中的1
 }
 
 /**
@@ -86,7 +99,7 @@ function mkTbody(keys) {
     }
 
     $tbody.append(str);
-    adjustThead();
+    adjustThead(); // 调整thead-fixed中的th的宽度
 }
 
 /**
@@ -105,7 +118,7 @@ function adjustThead() {
  * @param {String} timeStamp 时间戳 
  */
 function formatDate(timeStamp) {
-    let time = new Date(timeStamp);
+    const time = new Date(timeStamp);
     
     let year = time.getFullYear(),
     	month = time.getMonth() + 1,
@@ -122,7 +135,8 @@ function formatDate(timeStamp) {
  */
 function highlightOneHot() {
     let len = $tbody.find('tr').eq(0).children().length;
-    for (let i = len - 6; i <= len; i++) {
+    let dictLen = DICT.length; // 编码维度数
+    for (let i = len - dictLen + 1; i <= len; i++) {
         $tbody.find(`td:nth-child(${i}):contains('1')`).addClass('highlightonehot');
     }
 }
