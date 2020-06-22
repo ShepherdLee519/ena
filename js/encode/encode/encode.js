@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 17:47:14 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 18:02:06
+ * @Last Modified time: 2020-06-20 20:42:39
  */
 
 /*
@@ -22,6 +22,7 @@ var encodeConfig = {
  */
 function autoEncode() {
     if (DATA.length == 0 || DICT.length == 0) return;
+    ENCODE = []; // 清空ENCODE，避免二次编码时候累加
 
     let goals; // 存储 one-hot 数组
     let dictLen = DICT.length; // 编码维度数量

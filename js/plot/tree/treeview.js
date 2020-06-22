@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 20:28:25 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 21:14:04
+ * @Last Modified time: 2020-06-22 13:46:56
  */
 
 /*
@@ -68,6 +68,7 @@ function treeview( $tree, data ) {
     str += '</ul>';
     $tree.html('');
     $tree.append(str);
+    trigger('initTreeviewFinish', true);
 }
 
 /**
@@ -88,6 +89,10 @@ function generateTreeNode(hasChildren, indentTimes, content) {
     str += indent.repeat(indentTimes); // 缩进量
     if (hasChildren) str += minus; // 展开图标
     str += content; // 文本内容
+
+    // 颜色选择器
+    if (indentTimes != 2) str += `<span class="pull-right">
+        <input class="hidden colorpicker-container" /></span>`;
 
     /**
      * 组装li中的选择按钮部分

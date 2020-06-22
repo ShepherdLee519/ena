@@ -1,0 +1,59 @@
+@charset "utf-8";
+
+/*
+ * @Author: Shepherd.Lee 
+ * @Date: 2020-06-13 13:21:04 
+ * @Last Modified by: Shepherd.Lee
+ * @Last Modified time: 2020-06-22 14:39:08
+ */
+
+#treeZone{
+    margin-top: 10px;
+    max-height: 665px;
+    overflow-y: scroll;
+
+    li{
+        &:hover{
+            background-color: #EFEFEF !important;
+        }
+    }
+    
+    .indent{
+        padding-left: 40px;
+    }
+    .toggle-target{
+        padding-right: 5px;
+    }
+    .pull-right{
+        padding-right: 5px;
+
+        &.unactive{
+            color: #CCC;
+        }
+    }
+    .colorpicker-wrapper{
+        // 颜色选择框图标左移
+        margin-left: -7px;
+    }
+    .evo-colorind{
+        // 颜色选择框图标大小
+        width: 15px !important; 
+        height: 15px !important;
+    }
+    .evo-pop{
+        // 颜色选择器的位置
+        width: 213px;
+        right: 12.5px;
+        top: 30px;
+    }
+}
+
+#plotZone{
+    iframe{
+        margin-top: 20px;
+        margin-left: 15px;
+        width: 800px;
+        height: 600px;
+        box-shadow: 8px 5px 5px #CCC;
+    }
+}

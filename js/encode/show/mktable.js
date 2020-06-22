@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 18:07:44 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 18:16:41
+ * @Last Modified time: 2020-06-20 21:37:14
  */
 
 /*
@@ -15,7 +15,7 @@ const $thead = $('#thead');
 const $tbody = $('#tbody');
 const $tableFixed = $('#table-fixed');
 const $theadFixed = $('#thead-fixed');
-const LIMIT = 100; // 显示的数据范围
+const LIMIT = 500; // 显示的数据范围
 
 
 // 关于表格显示的一些设置

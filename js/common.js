@@ -2,18 +2,22 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 17:13:08 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 20:29:53
+ * @Last Modified time: 2020-06-20 21:10:54
  */
 
 /* 自定义的辅助函数:
  *
  * isundef()
+ * -------------------
  * exClass()
  * replaceClass()
  * hide() - show()
+ * -------------------
  * delegate()
  * listen() - trigger()
+ * -------------------
  * multistep()
+ * -------------------
  * getQuery() - saveQuery()
  * saveLocation() - toLocation()
  */

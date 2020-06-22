@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:20:53 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-13 13:38:38
+ * @Last Modified time: 2020-06-22 11:23:49
  */
 /*
  * @Author: Shepherd.Lee 
@@ -95,9 +95,10 @@ nav {
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:21:04 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 00:16:03
+ * @Last Modified time: 2020-06-22 14:39:08
  */
 #treeZone {
+  margin-top: 10px;
   max-height: 665px;
   overflow-y: scroll; }
   #treeZone li:hover {
@@ -110,5 +111,21 @@ nav {
     padding-right: 5px; }
     #treeZone .pull-right.unactive {
       color: #CCC; }
+  #treeZone .colorpicker-wrapper {
+    margin-left: -7px; }
+  #treeZone .evo-colorind {
+    width: 15px !important;
+    height: 15px !important; }
+  #treeZone .evo-pop {
+    width: 213px;
+    right: 12.5px;
+    top: 30px; }
+
+#plotZone iframe {
+  margin-top: 20px;
+  margin-left: 15px;
+  width: 800px;
+  height: 600px;
+  box-shadow: 8px 5px 5px #CCC; }
 
 /*# sourceMappingURL=index.css.map */
