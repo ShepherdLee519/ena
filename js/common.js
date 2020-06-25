@@ -2,12 +2,14 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 17:13:08 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-20 21:10:54
+ * @Last Modified time: 2020-06-25 17:51:48
  */
 
 /* 自定义的辅助函数:
  *
  * isundef()
+ * -------------------
+ * random()
  * -------------------
  * exClass()
  * replaceClass()
@@ -32,6 +34,24 @@
  */
 function isundef(target) {
     return target === void 0;
+}
+
+/*----------------字符串相关-------------------*/
+/**
+ * 返回用于填充用的随机字符(默认12位)
+ * 
+ * @param {Number} len = 12 随机字符长度
+ * @returns {string} 返回该随机字符串
+ */
+function random(len = 12) {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const num = chars.length;
+    let str = '';
+    
+    for (let i = 0; i < len; i++) {
+        str += chars.charAt( ~~(Math.random()*num) );
+    }
+    return str;
 }
 
 /*----------------样式相关-------------------*/

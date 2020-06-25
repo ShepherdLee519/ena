@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 17:34:02 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 17:37:43
+ * @Last Modified time: 2020-06-25 22:26:39
  */
 
 /*
@@ -38,6 +38,7 @@ function upload(type) {
                     alert('上传成功!');
                     // 即上传的为数据时，需要重置筛选选项
                     if (type === 'data') resetFilterOptions();
+                    $(`#load${type}`).click();
                 }
                 else alert('发生问题，请重新尝试!');
             }

@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 20:26:41 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-22 16:07:40
+ * @Last Modified time: 2020-06-25 21:02:12
  */
 
 /*
@@ -107,4 +107,18 @@ function getTreeNodeData( $tree, index) {
     nodeData.color = $colorind.data('color');
     
     return nodeData;
+}
+
+/**
+ * 获取所有的节点数据打包返回
+ * 
+ * @param {Object} $tree 目标树对象
+ */
+function getAllTreeNodesData( $tree ) {
+    const treeDatas = [];
+    const len = $tree.find('li').length;
+    for (let i = 0; i < len; i++) {
+        treeDatas.push(getTreeNodeData( $tree, i));
+    }
+    return treeDatas;
 }

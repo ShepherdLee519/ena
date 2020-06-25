@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-20 21:49:55 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-22 11:27:41
+ * @Last Modified time: 2020-06-24 20:51:19
  */
 
 /*
@@ -14,7 +14,7 @@ $(function() {
     $('#generate').click(function(e) {
         e.preventDefault();
         
-        const colorA = '#FF6666', colorB = '#0099CC';
+        const colorA = '#0099CC', colorB = '#FF6666';
         $.get("./php/runr.php", {color1: colorA, color2: colorB}, res => {
             if (res) console.log('finish!');
             console.log(res);
