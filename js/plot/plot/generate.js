@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-20 21:49:55 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-25 18:00:42
+ * @Last Modified time: 2020-06-30 03:42:02
  */
 
 /*
@@ -11,11 +11,24 @@
 
 
 $(function() {
+    listen('prepareCodes', runR);
+
     $('#generate').click(function(e) {
         e.preventDefault();
         
-        listen('prepareCodes', runR);
         prepareRCodes();
+        return false;
+    });
+
+    $('#refreshIframe').click( () => {
+        if ( $('#iframe').hasClass('hidden')) return false;
+        showIFrame();
+        return false;
+    });
+
+    $('#showSourcecode').click( () => {
+        $('#sourcecode').toggleClass('hidden');
+        $('#iframe').toggleClass('hidden');
         return false;
     });
 });
@@ -39,5 +52,5 @@ function showIFrame() {
     const $iframe = $('#iframe');
     hide( $iframe );
     $iframe.attr('src', `${defaultPath}?num=${random()}`);
-    show( $iframe );
+    show( [$iframe, $('#iframeBtns')] );
 }

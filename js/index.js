@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-20 20:47:14 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-25 22:50:55
+ * @Last Modified time: 2020-06-29 03:48:59
  */
 
 /*
@@ -11,8 +11,8 @@
 
 // 控制能否自由切换子页面(无需验证)的开关
 // 正式使用应设置成 true
-const PAGELOCK = true;
-// const PAGELOCK = false;
+// const PAGELOCK = true;
+const PAGELOCK = false;
 
 
 $(function() {

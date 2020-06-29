@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 20:42:43 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-22 15:55:21
+ * @Last Modified time: 2020-06-30 03:34:11
  */
 
 /*
@@ -12,6 +12,11 @@
 
 $(function() {
     listen('initTreeviewFinish', initColorpicker);
+
+    $('#resetTreeview').click( () => {
+        initTreeView();
+        return false;
+    });
 
     multistep([
         toggleTreeNodeHandler,
@@ -140,7 +145,8 @@ function toggleTreeNodeOptionsHandler( $tree ) {
         {
             target: '.center',
             event: 'click',
-            handler: toggleOption('center')
+            // handler: toggleOption('center')
+            handler: toggleOptionCenter
         }
     ]);
 
@@ -160,6 +166,38 @@ function toggleTreeNodeOptionsHandler( $tree ) {
                 $this.addClass(glyDict[`no_${target}`]).removeClass(glyDict[target]);
                 $this.addClass('unactive');
             }
+        }
+    }
+
+    /**
+     * 切换质心显示的事件处理
+     */
+    function toggleOptionCenter() {
+        const $li = $(this).closest('li');
+        const level = +$li.data('istop') + +$li.data('isparent') + 1;
+        if (level == 1) {
+            toggleOption('center').apply(this, null);
+        } else {
+            const state = $li.find('.center').hasClass(glyDict.no_center);
+
+            ;(function( $li, flag, state) {
+                const data_target = flag ? 'istop' : 'isparent';
+                let $temp = $li;
+                do {
+                    if ( state ) {
+                        $temp.find('.center')
+                            .removeClass(glyDict.no_center)
+                            .removeClass('unactive')
+                            .addClass(glyDict.center);
+                    } else {
+                        $temp.find('.center')
+                            .addClass(glyDict.no_center)
+                            .addClass('unactive')
+                            .removeClass(glyDict.center);
+                    }
+                    $temp = $temp.next();
+                } while( $temp.length && $temp.data(data_target) != 1 )
+            })( $li, +(level == 3), state);
         }
     }
 

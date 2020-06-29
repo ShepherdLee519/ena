@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-24 21:10:25 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-25 21:07:06
+ * @Last Modified time: 2020-06-30 03:50:05
  */
 
 /*
@@ -56,7 +56,7 @@ const prepareRCodes = (function() {
         base += `STEM.data = read.xlsx("${rcodeConfig.dataPath}${rcodeConfig.dataName}", 1)\n\n`;
 
         // output html
-        output += `\nsetwd("../output")\n`;
+        output += `\n\nsetwd("../output")\n`;
         output += `htmlwidgets::saveWidget(enaplot$plot, file="./${rcodeConfig.outputName}")\n`;
         return [base, output];
     }
@@ -117,6 +117,7 @@ const prepareRCodes = (function() {
         str += typeCodes();
         str += output;
         saveCodes(str);
+        $('#sourcecode').html(str);
     }
 
     return generateRCodes;

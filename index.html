@@ -257,8 +257,25 @@
 			<div id="treeWrapperZone" class="col-lg-3">
 				<!-- generateZone是绘制按钮所在的区域 -->
 				<div id="generateZone" class="col-lg-12">
-					<button id="generate" 
-						class="btn btn-info pull-right">结果绘制</button>
+					<form style="margin-top:5px;">
+						<div class="col-lg-12 form-group">
+							<div class="pull-right">
+								<button id="resetTreeview" 
+									class="btn btn-default" title="重置左侧显示">列表重置</button>
+							</div>
+						</div>
+						<div class="col-lg-12 form-group" style="position: absolute;margin-left: 100%;">
+							<div class="input-group">
+								<span class="input-group-addon">标题：</span>
+								<input type="text" class="form-control" id="plotTitle"
+									placeholder="Title" style="width:220px;">
+								<span class="input-group-btn">
+								<button id="generate" 
+									class="btn btn-info" title="结果绘制">结果绘制</button>
+								</span>
+							</div>
+						</div>
+					</form>
 				</div>
 				<!-- treeZone是树形控件本身的区域 -->
 				<div id="treeZone" class="col-lg-12"></div>
@@ -266,9 +283,15 @@
 			<!-- end treeZone -->
 
 			<div id="plotZone" class="col-lg-9">
+				<div class="pull-right hidden" id="iframeBtns">
+					<span id="showSourcecode" class="glyphicon glyphicon-search"></span>
+					<span id="refreshIframe" class="glyphicon glyphicon-refresh"></span>
+				</div>
 				<iframe class="hidden" src="#" id="iframe"></iframe>
+				<pre id="sourcecode" class="hidden"></pre>
 			</div>
 			<!-- end plotZone -->
+
 		</div>
 		<!-- end plot-row -->
 	</div>

@@ -95,11 +95,11 @@ nav {
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:21:04 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-22 14:39:08
+ * @Last Modified time: 2020-06-30 03:38:35
  */
 #treeZone {
-  margin-top: 10px;
-  max-height: 665px;
+  margin-top: -2.5px;
+  max-height: 610px;
   overflow-y: scroll; }
   #treeZone li:hover {
     background-color: #EFEFEF !important; }
@@ -121,11 +121,18 @@ nav {
     right: 12.5px;
     top: 30px; }
 
-#plotZone iframe {
-  margin-top: 20px;
-  margin-left: 15px;
+#plotZone iframe, #plotZone #sourcecode {
+  margin-top: 50px;
+  margin-left: 68.5px;
   width: 800px;
   height: 600px;
   box-shadow: 8px 5px 5px #CCC; }
+#plotZone #iframeBtns {
+  margin-top: 604px;
+  margin-right: 125px; }
+  #plotZone #iframeBtns span {
+    font-size: 140%;
+    display: block;
+    margin-bottom: 7px; }
 
 /*# sourceMappingURL=index.css.map */
