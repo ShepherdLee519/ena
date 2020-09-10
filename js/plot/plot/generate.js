@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-20 21:49:55 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-30 03:42:02
+ * @Last Modified time: 2020-07-31 03:31:38
  */
 
 /*
@@ -11,8 +11,12 @@
 
 
 $(function() {
+    // preparecodes -> saveCodes 后触发
     listen('prepareCodes', runR);
 
+    /**
+     * 点击后进行绘制的事件处理
+     */
     $('#generate').click(function(e) {
         e.preventDefault();
         
@@ -20,12 +24,18 @@ $(function() {
         return false;
     });
 
+    /**
+     * 刷新iframe的事件处理
+     */
     $('#refreshIframe').click( () => {
         if ( $('#iframe').hasClass('hidden')) return false;
         showIFrame();
         return false;
     });
 
+    /**
+     * 切换显示源代码的事件处理
+     */
     $('#showSourcecode').click( () => {
         $('#sourcecode').toggleClass('hidden');
         $('#iframe').toggleClass('hidden');
@@ -38,8 +48,13 @@ $(function() {
  */
 function runR() {
     $.get('./php/runr.php', res => {
-        if (res) console.log('finish!');
+        if (res) console.log('runR finish!');
         console.log(res);
+
+        $('#sourcecode').html(
+            $('#sourcecode').html() 
+                + `\n\nOutput:\n${res}`
+        );
         showIFrame();
     });
 }

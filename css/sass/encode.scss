@@ -4,11 +4,11 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:21:18 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-13 14:20:24
+ * @Last Modified time: 2020-08-12 13:42:07
  */
 
 #buttonZone{
-    form{
+    > form{
         padding-top: 45px;
         height: 665px;
         box-shadow: 8px 5px 5px #CCC;
@@ -39,11 +39,6 @@
         height: 45px;
     }
 
-    #table-fixed{
-        position: absolute;
-        background-color: white;
-    }
-
     #tableZone .table-wrap{
         max-height: 595px;
         overflow-y: scroll;
@@ -60,5 +55,9 @@
             font-size: 150%;
         }
 
+        tr.hover-thead{
+            background-color: #6699CC;
+            color: white;
+        }
     }
 }

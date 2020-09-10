@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>php to csv</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<!---------------------------- stylesheet zone --------------------------------->
+	<link rel="stylesheet" type="text/css" href="../css/bootstrap/bootstrap.min.css" />
+</head>
+<body>
+
+	<!-- 主内容区域 -->
+	<div class="container-fluid" id="mainZone">
+        <div class="row col-lg-12">
+			<br />
+			<form class="form form-horizontal">
+				<div class="form-group col-lg-9">
+					<div class="col-lg-2"><p>从DB读取生成csv:</p></div>
+					<button id="generate" class="btn btn-danger">Generate</button>
+				</div>
+				<div class="form-group col-lg-9">
+					<div class="col-lg-2"><p>将JSON导出至csv:</p></div>
+					<button id="export" class="btn btn-success">Export</button>
+				</div>
+				<div class="form-group col-lg-9">
+					<div class="col-lg-2"><p>从csv读入至JSON:</p></div>
+					<button id="import" class="btn btn-warning">Import</button>
+				</div>
+			</form>
+		</div>
+	</div>
+
+	<!----------------------- script zone ------------------------->
+	<!-- tools -->
+	<script type="text/javascript" src="../js/tool/jquery-3.3.1.min.js"></script>
+	<script type="text/javascript" src="../js/tool/bootstrap.min.js"></script>
+	<script type="text/javascript" src="js/test.js"></script>
+</body>
+</html>	

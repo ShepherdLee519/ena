@@ -1,0 +1,1 @@
+uglifyjs ./form/dynamic.js ./form/change.js ./form/initSelect.js ./form/getparameter.js ./rcode/showcodes.js -m -c -o ./parameter.js

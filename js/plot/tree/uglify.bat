@@ -1,0 +1,1 @@
+uglifyjs treedata.js treeview.js treehandlers.js -m -c -o tree.js

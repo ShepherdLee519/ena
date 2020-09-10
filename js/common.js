@@ -1,8 +1,8 @@
 /*
- * @Author: Shepherd.Lee 
- * @Date: 2020-06-14 17:13:08 
+ * @Author: Shepherd.Lee
+ * @Date: 2020-06-14 17:13:08
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-25 17:51:48
+ * @Last Modified time: 2020-08-08 02:26:26
  */
 
 /* 自定义的辅助函数:
@@ -19,6 +19,7 @@
  * listen() - trigger()
  * -------------------
  * multistep()
+ * once()
  * -------------------
  * getQuery() - saveQuery()
  * saveLocation() - toLocation()
@@ -28,7 +29,7 @@
 /*----------------对象相关-------------------*/
 /**
  * 判断某个js对象是否为undefined的简写
- * 
+ *
  * @param {Object} target 检查对象
  * @returns {Boolean} true-是undefined
  */
@@ -39,7 +40,7 @@ function isundef(target) {
 /*----------------字符串相关-------------------*/
 /**
  * 返回用于填充用的随机字符(默认12位)
- * 
+ *
  * @param {Number} len = 12 随机字符长度
  * @returns {string} 返回该随机字符串
  */
@@ -47,7 +48,7 @@ function random(len = 12) {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const num = chars.length;
     let str = '';
-    
+
     for (let i = 0; i < len; i++) {
         str += chars.charAt( ~~(Math.random()*num) );
     }
@@ -57,10 +58,10 @@ function random(len = 12) {
 /*----------------样式相关-------------------*/
 /**
  * 交换两个对象的某个类 结果只有其中一个对象有目标类
- * 
- * @param {Object} $nodeA jQuery对象 
- * @param {Object} $nodeB jQuery对象 
- * @param {String} classname 
+ *
+ * @param {Object} $nodeA jQuery对象
+ * @param {Object} $nodeB jQuery对象
+ * @param {String} classname
  */
 function exClass( $nodeA, $nodeB, classname ) {
     if ( $nodeA.hasClass(classname) ){
@@ -74,7 +75,7 @@ function exClass( $nodeA, $nodeB, classname ) {
 
 /**
  * 目标对象删去A类 换上B类
- * 
+ *
  * @param {Object} $node jQuery对象
  * @param {String} classA
  * @param {String} classB
@@ -86,8 +87,8 @@ function replaceClass( $node, classA, classB ) {
 /**
  * addClass("hidden") 的简写\
  * 可适用于节点数组 - 默认传入jQuery对象
- * 
- * @param {Object} $node 
+ *
+ * @param {Object} $node
  */
 function hide( $node ) {
     if ( !Array.isArray( $node ) ) {
@@ -103,8 +104,8 @@ function hide( $node ) {
 /**
  * removeClass("hidden") 的简写\
  * 可适用于节点数组 - 默认传入jQuery对象
- * 
- * @param {Object} $node 
+ *
+ * @param {Object} $node
  */
 function show( $node ) {
     if ( !Array.isArray( $node ) ) {
@@ -120,25 +121,25 @@ function show( $node ) {
 /*----------------事件相关-------------------*/
 /**
  * 在指定对象上委托多个事件的简写
- * 
+ *
  * @example
  * delegate($(target), {
  *      target: ".classname",
  *      event: "click",
  *      handler: handler
  * });
- * @param {Object} $target 
+ * @param {Object} $target
  * @param {Object} handlerObjs - target/event/handler
  */
 function delegate( $target, handlerObjs ) {
-    handlerObjs = ( !Array.isArray(handlerObjs) ) ? 
+    handlerObjs = ( !Array.isArray(handlerObjs) ) ?
         [handlerObjs] : handlerObjs;
-    
-    handlerObjs.forEach(obj => { 
+
+    handlerObjs.forEach(obj => {
         if( !Array.isArray(obj.target) ) {
            $target.delegate(
                 obj.target, obj.event, obj.handler
-            ); 
+            );
         } else {
             obj.target.forEach(target => {
                 $target.delegate(
@@ -151,7 +152,7 @@ function delegate( $target, handlerObjs ) {
 
 /**
  * 在document上监听事件
- * 
+ *
  * @param {String} eventType 监听的事件类型
  * @param {Function} fn 事件函数
  * @param {Array} args = [] 事件函数的参数
@@ -164,7 +165,7 @@ function listen(eventType, fn, args = []) {
 
 /**
  * 在document上触发事件
- * 
+ *
  * @param {String} eventType 触发的事件类型
  * @param {Boolean} hold = false 默认不保持，即触发后就取消绑定
  */
@@ -176,7 +177,7 @@ function trigger(eventType, hold = false) {
 /*----------------事件相关-------------------*/
 /**
  * 分割任务异步调用的公用方法
- * 
+ *
  * @param {Array<Function>} steps 调用的函数数组
  * @param {Array<Array<*>>} argsArray 每个函数对应的参数列表的数组
  */
@@ -188,12 +189,27 @@ function multistep(steps, argsArray = []) {
     }
 }
 
+/**
+ * 保证函数只执行一次
+ * 
+ * @param {Function} func 
+ * @returns {Function} 返回仅执行一次(单例)的新函数
+ */
+function once(func) {
+	let done = false;
+
+	return (...args) => {
+		return done ? void 0 :
+			( (done = true), func.apply(this, args) );
+	}
+}
+
 /*----------------URL相关-------------------*/
 /**
  * 根据变量名查询querystring值\
  * 默认情况下(无变量名)返回querystring的键值对对象
- * 
- * @param {String} variable = null 变量名 
+ *
+ * @param {String} variable = null 变量名
  * @returns {Object} 键值对对象或某个键对应的值
  */
 function getQuery(variable = null) {
@@ -210,9 +226,9 @@ function getQuery(variable = null) {
 /**
  * 将键值以key=value的格式存入location.search\
  * 有则修改，无则添加
- * 
- * @param {String} key 
- * @param {*} value 
+ *
+ * @param {String} key
+ * @param {*} value
  * @param {Boolean} refresh = false 默认不刷新
  */
 function saveQuery(key, value, refresh = false) {
@@ -220,7 +236,7 @@ function saveQuery(key, value, refresh = false) {
         search = location.search,
         querystring = '',
         querys = location.search.slice(1).split('&');
-    
+
     if (search === ''){
         querystring = `?${key}=${value}`;
     } else {
@@ -243,9 +259,9 @@ function saveQuery(key, value, refresh = false) {
  * 保存search变化的工具函数\
  * 使用window.location.search 会触发刷新\
  * 使用history.pushState 不会刷新
- * 
- * @param {Boolean} refresh true - 刷新/false - 使用history 
- * @param {String} querystring 
+ *
+ * @param {Boolean} refresh true - 刷新/false - 使用history
+ * @param {String} querystring
  * @param {Object} data = null history.pushState中的对象
  */
 function saveLocation(refresh, querystring, data = null) {
@@ -258,7 +274,7 @@ function saveLocation(refresh, querystring, data = null) {
 
 /**
  * 根据传入的querystring对象组装url并跳转
- * 
+ *
  * @example
  * //http://localhost/AniNavi/index.php?page=1&year=2020&month=1
  * toLocation({page:1, year:2020, month:1})
@@ -267,7 +283,7 @@ function saveLocation(refresh, querystring, data = null) {
  */
 function toLocation(queryObj, refresh = false) {
     let querys = [], querystring = '?';
-    
+
     for (let key in queryObj) {
         querys.push(`${key}=${queryObj[key]}`);
     }

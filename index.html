@@ -31,11 +31,49 @@
 		</div>
 	</nav>
 
+	<!-- 主内容区域 -->
 	<div class="container-fluid" id="mainZone">
 		<div class="row hidden" id="encode-row">
 			<!-- buttonZone是左侧的按钮，tableZone是右侧的表格内容 -->
 			<div id="buttonZone" class="col-lg-3">
 			<form role="form" method="POST" enctype="multipart/form-data">
+				<!-- dbdata form -->
+				<div class="form-group">
+					<div class="btn-group">
+						<button id="loaddbdata" class="btn btn-primary">数据拉取</button>
+						<button id="filterdbdata" class="btn btn-info" 
+							data-toggle="collapse" href="#filterdbForm">
+							<span class="glyphicon glyphicon-filter"></span>
+						</button>
+					</div>
+				</div>
+				<!-- filter dbdata form -->
+				<div id="filterdbForm" class="panel-collapse collapse">
+					<div class="panel-body">
+						<div>
+							<label class="control-label">筛选班级：</label>
+							<div id="filterdbClass" class="well">
+								<label class="checkbox-inline">
+									<input type="checkbox" class="all-checkbox" value=0 checked> All
+								</label>
+								<br />
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="control-label">筛选小组：</label>
+							<div id="filterdbGroup" class="well">
+								<label class="checkbox-inline">
+									<input type="checkbox" class="all-checkbox" value=0 checked> All
+								</label>
+								<br />
+							</div>
+						</div>
+
+						<div class="alert alert-warning">选择完毕后请点击&lt;数据拉取&gt;更新</div>
+					</div>
+					<!-- end panel-body -->
+				</div>
+
 				<!-- data form -->
 				<div class="form-group">
 					<div class="btn-group">
@@ -52,23 +90,29 @@
 				<!-- filter form -->
 				<div id="filterForm" class="panel-collapse collapse">
 					<div class="panel-body">
-						<div class="form-group">
+						<div>
 							<label class="control-label">筛选班级：</label>
-							<select class="form-control" id="filterClass">
-								<option value=0>All</option>
-							</select>
+							<div id="filterClass" class="well">
+								<label class="checkbox-inline">
+									<input type="checkbox" class="all-checkbox" value=0 checked> All
+								</label>
+								<br />
+							</div>
 						</div>
 						<div class="form-group">
 							<label class="control-label">筛选小组：</label>
-							<select class="form-control" id="filterGroup">
-								<option value=0>All</option>
-							</select>
+							<div id="filterGroup" class="well">
+								<label class="checkbox-inline">
+									<input type="checkbox" class="all-checkbox" value=0 checked> All
+								</label>
+								<br />
+							</div>
 						</div>
-						<div class="alert alert-warning">选择完毕后请点击加载数据更新</div>
+
+						<div class="alert alert-warning">选择完毕后请点击&lt;加载数据&gt;更新</div>
 					</div>
 					<!-- end panel-body -->
 				</div>
-				<br />
 				<!-- dictionary form -->
 				<div class="form-group">
 					<button id="loaddictionary" class="btn btn-primary">加载编码词典</button>
@@ -96,12 +140,9 @@
 				</form>
 				
 				<div id="tableZone">
-					<table id="table-fixed" class="table table-bordered table-hover hidden">
-						<thead id="thead-fixed"></thead>
-					</table>
 					<div class="table-wrap">
-						<table id="table" class="table table-bordered table-hover hidden">
-							<thead id="thead" style="visibility: hidden;"></thead>
+						<table id="table" class="table table-bordered table-hover">
+							<thead id="thead"></thead>
 							<tbody id="tbody"></tbody>
 						</table>
 					</div>
@@ -119,15 +160,7 @@
 				<div id="parameter-analysisUnit" class="units" data-type="analysisUnit">
 					<div class="form-group unit">
 						<div class="col-sm-10">
-							<select class="form-control analysisUnit-select">
-								<option value=0>请选择</option>
-								<option value=1>classID</option>
-								<option value=2>gpID</option>
-								<option value=3>gpNO</option>
-								<option value=4>userName</option>
-								<option value=5>stageID</option>
-								<option value=6>taskID</option>
-								<option value=7>content</option>
+							<select class="form-control analysisUnit-select" id="analysisUnit-select">
 							</select>
 						</div>
 						<div class="col-sm-2">
@@ -150,15 +183,7 @@
 				<div id="parameter-analysisWords" class="units" data-type="analysisWords">
 					<div class="form-group unit">
 						<div class="col-sm-10">
-							<select class="form-control analysisWords-select">
-								<option value=0>请选择</option>
-								<option value=1>classID</option>
-								<option value=2>gpID</option>
-								<option value=3>gpNO</option>
-								<option value=4>userName</option>
-								<option value=5>stageID</option>
-								<option value=6>taskID</option>
-								<option value=7>content</option>
+							<select class="form-control analysisWords-select" id="analysisWords-select">
 							</select>
 						</div>
 						<div class="col-sm-2">
@@ -192,52 +217,17 @@
 					<div class="form-group">
 						<div class="col-sm-12">
 						<ul class="list-group" id="parameter-dimensions">
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>analysis</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>objective</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>context</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>knowledge</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>activity</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
-							<div class="checkbox checkbox-slider--b">
-								<label><input type="checkbox" data-type='encodeDimensions' checked>
-									<span>technology</span></label>
-							</div>
-						</li>
-						<li class="list-group-item">
+						<!-- <li class="list-group-item">
 							<div class="checkbox checkbox-slider--b">
 								<label><input type="checkbox" data-type='encodeDimensions' checked>
 									<span>evaluation</span></label>
 							</div>
-						</li>
+						</li> -->
 						</ul>
 						</div>
 					</div>
 				</div>
+				<!-- end parameter-encodeDimensions -->
 			</form>
 			</div>
 			<!-- end parameterZone -->
@@ -259,16 +249,14 @@
 				<div id="generateZone" class="col-lg-12">
 					<form style="margin-top:5px;">
 						<div class="col-lg-12 form-group">
-							<div class="pull-right">
-								<button id="resetTreeview" 
-									class="btn btn-default" title="重置左侧显示">列表重置</button>
-							</div>
+							<button id="resetTreeview" class="btn btn-default pull-right" 
+								title="重置左侧显示">列表重置</button>
 						</div>
 						<div class="col-lg-12 form-group" style="position: absolute;margin-left: 100%;">
 							<div class="input-group">
 								<span class="input-group-addon">标题：</span>
-								<input type="text" class="form-control" id="plotTitle"
-									placeholder="Title" style="width:220px;">
+									<input type="text" class="form-control" id="plotTitle"
+										placeholder="Title" style="width:250px;" />
 								<span class="input-group-btn">
 								<button id="generate" 
 									class="btn btn-info" title="结果绘制">结果绘制</button>
@@ -284,8 +272,10 @@
 
 			<div id="plotZone" class="col-lg-9">
 				<div class="pull-right hidden" id="iframeBtns">
-					<span id="showSourcecode" class="glyphicon glyphicon-search"></span>
-					<span id="refreshIframe" class="glyphicon glyphicon-refresh"></span>
+					<span id="showSourcecode" class="glyphicon glyphicon-search"
+						title="显示R源代码"></span>
+					<span id="refreshIframe" class="glyphicon glyphicon-refresh"
+						title="刷新图像"></span>
 				</div>
 				<iframe class="hidden" src="#" id="iframe"></iframe>
 				<pre id="sourcecode" class="hidden"></pre>
@@ -302,40 +292,36 @@
 	<script type="text/javascript" src="js/tool/jquery-ui.min.js"></script>
 	<script type="text/javascript" src="js/tool/bootstrap.min.js"></script>
 	<script type="text/javascript" src="js/tool/evol-colorpicker.min.js"></script>
-	<script type="text/javascript" src="js/tool/xlsx.core.min.js"></script>
-	<script type="text/javascript" src="js/tool/jquery-ajax-blob-arraybuffer.js"></script>
 
 	<script type="text/javascript" src="js/common.js"></script>
 
+	<script type="text/javascript" src="js/config.js"></script>
+
 	<!-- encode -->
-	<script type="text/javascript" src="js/encode/xlsx/loadxlsx.js"></script>
-	<script type="text/javascript" src="js/encode/xlsx/exportxlsx.js"></script>
-	<script type="text/javascript" src="js/encode/xlsx/upload.js"></script>
-
-	<script type="text/javascript" src="js/encode/encode/dictionary.js"></script>
-	<script type="text/javascript" src="js/encode/encode/encode.js"></script>
+	<script type="text/javascript" src="./js/encode/xlsx.js"></script>
+	<script type="text/javascript" src="./js/encode/dictionary.js"></script>
+	<script type="text/javascript" src="./js/encode/mktable.js"></script>
+	<script type="text/javascript" src="./js/encode/filter.js"></script>
 	
-	<script type="text/javascript" src="js/encode/show/filter.js"></script>
-	<script type="text/javascript" src="js/encode/show/mktable.js"></script>
-
-	<script type="text/javascript" src="js/encode/handlers.js"></script>
-
 	<!-- parameter -->
-	<script type="text/javascript" src="js/parameter/form/dynamic.js"></script>
-	<script type="text/javascript" src="js/parameter/form/change.js"></script>
-	<script type="text/javascript" src="js/parameter/form/getparameter.js"></script>
+	<script type="text/javascript" src="js/parameter/parameter.js"></script>
+	<!-- <script type="text/javascript" src="js/parameter/form/dynamic.js"></script> -->
+	<!-- <script type="text/javascript" src="js/parameter/form/change.js"></script> -->
+	<!-- <script type="text/javascript" src="js/parameter/form/initSelect.js"></script> -->
+	<!-- <script type="text/javascript" src="js/parameter/form/getparameter.js"></script> -->
 
 	<script type="text/javascript" src="js/parameter/rcode/showcodes.js"></script>
 
 	<!-- plot -->
-	<script type="text/javascript" src="js/plot/tree/treeview.js"></script>
-	<script type="text/javascript" src="js/plot/tree/treedata.js"></script>
-	<script type="text/javascript" src="js/plot/tree/treehandlers.js"></script>
+	<script type="text/javascript" src="js/plot/tree/tree.js"></script>
+	<!-- <script type="text/javascript" src="js/plot/tree/treedata.js"></script> -->
+	<!-- <script type="text/javascript" src="js/plot/tree/treeview.js"></script> -->
+	<!-- <script type="text/javascript" src="js/plot/tree/treehandlers.js"></script> -->
 
-	<!-- <script type="text/javascript" src="js/plot/plot/generate_test.js"></script> -->
-	<script type="text/javascript" src="js/plot/plot/generate.js"></script>
-	<script type="text/javascript" src="js/plot/plot/typecodes.js"></script>
-	<script type="text/javascript" src="js/plot/plot/preparecodes.js"></script>
+	<script type="text/javascript" src="js/plot/plot/plot.js"></script>
+	<!-- <script type="text/javascript" src="js/plot/plot/generate.js"></script> -->
+	<!-- <script type="text/javascript" src="js/plot/plot/typecodes.js"></script> -->
+	<!-- <script type="text/javascript" src="js/plot/plot/preparecodes.js"></script> -->
 
 	<script type="text/javascript" src="js/index.js"></script>
 </body>

@@ -1,21 +1,9 @@
 /*
  * @Author: Shepherd.Lee 
- * @Date: 2020-06-14 20:28:25 
+ * @Date: 2020-07-24 22:07:05 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-22 13:46:56
+ * @Last Modified time: 2020-08-08 02:06:41
  */
-
-/*
- * 组建treeview控件的实现
- */
-
-
-const $tree = $('#treeZone');
-
-$(function() {
-    listen('treeview', initTreeView);
-});
-
 
 /**
  * 树形控件中显示的图标相关的类的词典
@@ -29,69 +17,67 @@ const glyDict = {
     center: 'glyphicon-eye-open'
 };
 
+// 允许绘制树形控件
+let allowTreeView = false;
+
 /**
- *  初始化树形控件\
- *  treeview事件触发后执行
+ * 初始化树形控件的显示
  */
 function initTreeView() {
-    treeview( $tree, getTreeData() );
-}
+    if ( !allowTreeView ) return;
+    allowTreeView = false;
 
-/**
- * 在指定区域下根据对象数组初始化树形控件
- * 
- * @param {Object} $tree 
- * @param {Array<Object>} data 
- */
-function treeview( $tree, data ) {
-    if (isundef(data)) return;
+    let units = getParameter('analysisUnit');
+    const treeData = getTreedata(units);
+    if (isundef(treeData)) return;
 
+    const $tree = $('#treeZone');
     let str = '<ul class="list-group">';
-    data.forEach(cls => {
-        let hasGroup = cls.groups.length != 0;
-        let content = `Class ${cls.classID}`;
-        str += generateTreeNode(hasGroup, 0, content);
-        if ( !hasGroup ) return;
 
-        cls.groups.forEach(group => {
-            let hasMember = group.members.length != 0;
-            let content = `Group ${cls.classID}.${group.gpID}`;
-            str += generateTreeNode(hasMember, 1, content);
-            if ( !hasMember ) return;
+    /**
+     * 
+     * @param {Array<Object>} data 
+     * @param {Number} floor 
+     */
+    function dealWithDataRecursively(data, floor) {
+        if (data.length == 0) return;
 
-            group.members.forEach(member => {
-                let content = `Student ${cls.classID}.${group.gpID}.${member}`;
-                str += generateTreeNode(false, 2, content);
-            });
+        data.forEach(obj => {
+            str += generateTreeNode(floor, obj.next.length != 0, obj.type, obj.value);
+            dealWithDataRecursively(obj.next, floor + 1);
         });
-    });
+    }
+
+    dealWithDataRecursively(treeData, 0);
     str += '</ul>';
     $tree.html('');
     $tree.append(str);
-    trigger('initTreeviewFinish', true);
+    initColorpicker();
 }
 
 /**
  * 组装每个list-item并返回
  * 
+ * @param {Number} floor 缩进级别
  * @param {Boolean} hasChildren 是否有子节点 - 显示toggle-target
- * @param {Number} indentTimes 缩进级别
- * @param {String} content list-item的内容
+ * @param {String} type
+ * @param {String} value
  */
-function generateTreeNode(hasChildren, indentTimes, content) {
+function generateTreeNode(floor, hasChildren, type, value) {
     const minus = '<span class="toggle-target glyphicon glyphicon-minus"></span>';
     const indent = '<span class="indent"></span>';
 
     let str = `<li class="list-group-item" 
-        data-istop=${indentTimes == 0?1:0}
-        data-isparent=${hasChildren?1:0}>`;
-
-    str += indent.repeat(indentTimes); // 缩进量
+        data-floor="${floor}" 
+        data-type="${type}"
+        data-value="${value}" >`;
+    str += indent.repeat(floor); // 缩进量
     if (hasChildren) str += minus; // 展开图标
+    let content = `${type} ${value}`;
     str += content; // 文本内容
 
     // 颜色选择器
-    if (indentTimes != 2) str += `<span class="pull-right">
+    if (hasChildren) str += `<span class="pull-right">
         <input class="hidden colorpicker-container" /></span>`;
 
     /**
@@ -107,11 +93,22 @@ function generateTreeNode(hasChildren, indentTimes, content) {
             glyphicon ${cls}" title="${title}"></span>`;
     }
 
-    str += generateGly('center', glyDict.center, '显示质心');
-    if (indentTimes == 0) str += generateGly('mean', glyDict.mean, '显示平均质心');
-    else if (indentTimes == 1) str += generateGly('mean', glyDict.no_mean, '显示平均质心', false);
+    str += generateGly('center', glyDict.no_center, '显示质心', false);
+    if (floor == 0) str += generateGly('mean', glyDict.mean, '显示平均质心');
+    else if (floor == 1) str += generateGly('mean', glyDict.no_mean, '显示平均质心', false);
     str += generateGly('net', glyDict.no_net, '显示网络图', false);
 
     str += '</li>';
     return str;
+}
+
+/**
+ * 初始化颜色选择器的事件处理
+ */
+function initColorpicker() {
+    const $container = $('.colorpicker-container');
+    $container.colorpicker();
+    $container.parent().addClass('colorpicker-wrapper');
+    $container.next().data('color', '');
+    $container.next().attr('title', '当前选择颜色为：<无>');
 }

@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 18:19:19 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-14 18:26:45
+ * @Last Modified time: 2020-08-28 17:00:34
  */
 
 /*
@@ -24,6 +24,11 @@ $(function() {
             target: '.delete-unit',
             event: 'click',
             handler: deleteUnit
+        },
+        {
+            target: '#parameter-analysisUnit select',
+            event: 'change',
+            handler: changeUnit
         }
     ]);
 });
@@ -35,8 +40,31 @@ function addUnit() {
     const $lastUnit = $(this).closest('.last-unit');
     const $clone = $lastUnit.prev().clone();
     $clone.find('select').val(0);
+    $clone.find('select').attr('id', '');
     $lastUnit.before( $clone ); // 新的选择框加在最末
     resetOption( $(this).closest('.units') );
+    return false;
+}
+
+/**
+ * 分析单元的change事件处理函数
+ */
+function changeUnit() {
+    allowTreeView = true;
+    
+    let val = $(this).find('option:selected').html();
+    console.log(`Change unit: ${val}`);
+    let hasNull = false;
+    for (let i = 0; i < DATA.length; i++) {
+        if ( DATA[i][val] == null ) {
+            console.log(i);
+            hasNull = true;
+            break;
+        }
+    }
+    if (hasNull) {
+        alert(`WARNING! 表中<${val}>列存在空值!`);
+    }
     return false;
 }
 
@@ -45,6 +73,8 @@ function addUnit() {
  */
 function deleteUnit() {
     const $unit = $(this).closest('.unit');
+    if ( +$unit.find('select').val() != 0 ) 
+        allowTreeView = true;
     const $units = $unit.closest('.units');
     const type = $units.data('type');
     let len = $units.children('.unit').length;

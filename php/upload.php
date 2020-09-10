@@ -1,7 +1,7 @@
 <?php
 
 $type = $_POST['type'];
-$filename = $type.'.xlsx';
+$filename = $type.'.csv';
 
 $str = 'upload'.$type; // name(input)
 $FILE_PATH = '../xlsx/';

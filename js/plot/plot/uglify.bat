@@ -1,0 +1,1 @@
+uglifyjs generate.js preparecodes.js typecodes.js -m -c -o plot.js

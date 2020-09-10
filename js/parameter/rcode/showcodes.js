@@ -2,17 +2,12 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 20:14:41 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-25 01:19:55
+ * @Last Modified time: 2020-07-24 21:44:10
  */
 
 /*
- * 显示对应R代码的实现 
+ * 显示对应参数设置的R代码的实现 
  */
-
-
-$(function() {
-    initShowCodes(); // 初始化代码区域的显示
-});
 
 
 /**
@@ -34,8 +29,7 @@ function showCodes(type) {
             } 
             str +=
             '#确定分析单位是每个班级每个小组的每个学生\n' +
-            `units = <b>STEM.data[,c(${decorateValues(values).join(',')})]</b>\n` +
-            'head(units)';
+            `units = <b>STEM.data[,c(${decorateValues(values).join(',')})]</b>\n`;
             break;
         // 分析话语
         case 'analysisWords':
@@ -46,8 +40,7 @@ function showCodes(type) {
             } 
             str += 
             '#确定会话是每个班每个小组的每次讨论活动\n' +
-            `conversation = <b>STEM.data[,c(${decorateValues(values).join(',')})]</b>\n` +
-            'head(conversation)';
+            `conversation = <b>as.data.frame(STEM.data[,c(${decorateValues(values).join(',')})])</b>\n`;
             break;
         // 窗口大小
         case 'windowSize':
@@ -69,8 +62,7 @@ function showCodes(type) {
             '<b>codeCols = c(\n' +
             `   ${decorateValues(values).join(',')}\n` +
             ')</b>\n' +
-            'codes = STEM.data[,codeCols]\n' +
-            'head(codes)';
+            'codes = STEM.data[,codeCols]\n';
             break;
         default:
             console.error(`WRONG type:<${type}>!`);
@@ -94,6 +86,21 @@ function decorateValues(values) {
  * 根据已选择的默认值，初始化代码显示区域
  */
 function initShowCodes() {
+    if (initShowCodes.init) return;
+
+    const $target = $('#parameter-dimensions');
+    let str = '';
+    encodeConfig.dimensions.forEach(dimension => {
+        str += `
+        <li class="list-group-item">
+            <div class="checkbox checkbox-slider--b">
+                <label><input type="checkbox" data-type='encodeDimensions' checked>
+                    <span>${dimension}</span></label>
+            </div>
+        </li>`.trim();
+    });
+    $target.html(str);
+    
     // 1. analysisUnit
     if( $('#parameter-analysisUnit').find('option:selected').length ) {
         showCodes('analysisUnit');
@@ -112,4 +119,6 @@ function initShowCodes() {
     if ( $('#parameter-encodeDimensions').find('input:checked').length ) {
         showCodes('encodeDimensions');
     }
+
+    initShowCodes.init = true;
 }

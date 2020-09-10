@@ -2,17 +2,12 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-20 20:47:14 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-29 03:48:59
+ * @Last Modified time: 2020-08-17 13:36:56
  */
 
 /*
  * 点击按钮切换子页面显示的事件处理
  */
-
-// 控制能否自由切换子页面(无需验证)的开关
-// 正式使用应设置成 true
-// const PAGELOCK = true;
-const PAGELOCK = false;
 
 
 $(function() {
@@ -51,6 +46,9 @@ $(function() {
  * @param {String} type 页面对应类型：encode/parameter/plot
  */
 function showZone(type) {
+    if (type === 'parameter') initShowCodes();
+    if (type === 'plot') initTreeView();
+
     $(`#navigator li[data-type=${type}]`).addClass('active');
     hide( $("#mainZone").children() ).show( $(`#${type}-row`) );
 }
@@ -72,9 +70,9 @@ function ifPrepared(type, homePage) {
         return isundef(target) || target.length == 0;
     }
 
-    if (isEmpty(DATA) || isEmpty(DICT) || isEmpty(ENCODE)) {
+    if (isEmpty(ENCODE)) {
         // 如果在自动编码界面没有读入数据并初始化自动编码结果，则不能跳转至其他界面
-        return [false, '请先完成"自动编码"界面的数据加载与编码!'];
+        return [false, '请先完成"自动编码"界面的操作!'];
     } else if (type === 'plot') {
         const para = gatherParameter();
         return [para.conversation.length && para.units.length, '请先完成<分析单元>与<分析话语>等的参数设置!'];

@@ -7,13 +7,17 @@ foreach( $files as $file ) {
     unlink( $file ); 
 }
 
+
+// $RPath = "Rscript";
+// $scriptPath = "/home/www/htdocs/phpR/R/";
+
 // It will get the values submitted by the HTML form 
 // and store it into variables to be passed as arguments required by R script
 
 $RPath = "C:\\R\\R-4.0.0\\bin\\Rscript.exe";
 $scriptPath = "C:\\wamp64\\www\\ena\\R\\";
 
-exec('"'.$RPath.'" '.$scriptPath.'ena_auto.R');
-echo 1;
-
+exec('"'.$RPath.'" '.$scriptPath.'ena_auto.R 2>&1', $resArr);
+// echo 1;
+print_r( $resArr );
 ?>

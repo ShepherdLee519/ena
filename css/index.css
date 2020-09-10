@@ -29,9 +29,9 @@ nav {
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:21:18 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-13 14:20:24
+ * @Last Modified time: 2020-08-12 13:42:07
  */
-#buttonZone form {
+#buttonZone > form {
   padding-top: 45px;
   height: 665px;
   box-shadow: 8px 5px 5px #CCC; }
@@ -51,9 +51,6 @@ nav {
   #showZone form {
     margin-left: 90%;
     height: 45px; }
-  #showZone #table-fixed {
-    position: absolute;
-    background-color: white; }
   #showZone #tableZone .table-wrap {
     max-height: 595px;
     overflow-y: scroll;
@@ -65,6 +62,9 @@ nav {
       background-color: #FF6666;
       font-weight: bold;
       font-size: 150%; }
+    #showZone #tableZone .table-wrap tr.hover-thead {
+      background-color: #6699CC;
+      color: white; }
 
 /*
  * @Author: Shepherd.Lee 
@@ -95,7 +95,7 @@ nav {
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-13 13:21:04 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-30 03:38:35
+ * @Last Modified time: 2020-07-25 01:57:56
  */
 #treeZone {
   margin-top: -2.5px;
@@ -104,7 +104,7 @@ nav {
   #treeZone li:hover {
     background-color: #EFEFEF !important; }
   #treeZone .indent {
-    padding-left: 40px; }
+    padding-left: 25px; }
   #treeZone .toggle-target {
     padding-right: 5px; }
   #treeZone .pull-right {
@@ -121,12 +121,14 @@ nav {
     right: 12.5px;
     top: 30px; }
 
-#plotZone iframe, #plotZone #sourcecode {
+#plotZone iframe, #plotZone pre {
   margin-top: 50px;
   margin-left: 68.5px;
   width: 800px;
   height: 600px;
   box-shadow: 8px 5px 5px #CCC; }
+#plotZone pre {
+  overflow-y: scroll; }
 #plotZone #iframeBtns {
   margin-top: 604px;
   margin-right: 125px; }

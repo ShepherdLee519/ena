@@ -2,7 +2,7 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-14 18:07:44 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-20 21:37:14
+ * @Last Modified time: 2020-08-07 23:28:14
  */
 
 /*
@@ -13,9 +13,6 @@
 const $table = $('#table');
 const $thead = $('#thead');
 const $tbody = $('#tbody');
-const $tableFixed = $('#table-fixed');
-const $theadFixed = $('#thead-fixed');
-const LIMIT = 500; // 显示的数据范围
 
 
 // 关于表格显示的一些设置
@@ -24,13 +21,16 @@ var tableConfig = {
     pass: [] // 无视这些属性
 };
 
+$(function() {
+    showTheadHandler();
+});
+
 
 /**
  * 清空 table 中的内容
  */
 function clsTable() {
     $thead.html('');
-    $theadFixed.html('');
     $tbody.html('');
 }
 
@@ -42,14 +42,13 @@ function clsTable() {
  */
 function mkTable(type) {
     clsTable(); // 清空表格内容
-    show([ $table, $tableFixed ]);
+    show( $table );
     TYPE = type; // 保存当前所显示的数据对象类型
     console.log('mktable: ', TARGET.length); 
     const keys = mkThead(); // 表头数组
     mkTbody(keys);
 
     // 表格绘制成功后的额外处理
-    if (type == 'data') initFilterOptions(); // 初始化筛选选项
     if (type == 'encode') highlightOneHot(); // 高亮one-hot中的1
 }
 
@@ -71,7 +70,6 @@ function mkThead() {
 
     str += '</tr>';
     $thead.append(str);
-    $theadFixed.append(str);
     return keys;
 }
 
@@ -99,17 +97,6 @@ function mkTbody(keys) {
     }
 
     $tbody.append(str);
-    adjustThead(); // 调整thead-fixed中的th的宽度
-}
-
-/**
- * 组装完成table后调整thead-fixed中的th的宽度
- */
-function adjustThead() {
-    $tableFixed.css('width', $table.css('width'));
-    $thead.find('th').each( (index, th) => {
-        $theadFixed.find('th').eq(index).css('width', $(th).css('width'));
-    });
 }
 
 /**
@@ -139,4 +126,38 @@ function highlightOneHot() {
     for (let i = len - dictLen + 1; i <= len; i++) {
         $tbody.find(`td:nth-child(${i}):contains('1')`).addClass('highlightonehot');
     }
+}
+
+/**
+ * 悬浮的显示表头的事件处理函数
+ */
+function showTheadHandler() {
+    let $target, content;
+    
+    delegate( $tbody, [
+        {
+            target: 'tr',
+            event: 'mouseover',
+            handler: function() {
+                if ( $(this).closest('tbody').children().length < 10 ) return;
+                if ( !$(this).prev().length ) return false;
+                $target = $(this).prev();
+                $target.addClass('hover-thead');
+                content = $target.html();
+                $target.html( $thead.find('tr').html() );
+                return false;
+            }
+        },
+        {
+            target: 'tr',
+            event: 'mouseout',
+            handler: function() {
+                if ( $(this).closest('tbody').children().length < 10 ) return;
+                if ( !$(this).prev().length ) return false;
+                $target.removeClass('hover-thead');
+                $target.html(content);
+                return false;
+            }
+        }
+    ]);
 }

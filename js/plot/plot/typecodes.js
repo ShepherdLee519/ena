@@ -2,14 +2,22 @@
  * @Author: Shepherd.Lee 
  * @Date: 2020-06-25 21:02:50 
  * @Last Modified by: Shepherd.Lee
- * @Last Modified time: 2020-06-30 02:32:12
+ * @Last Modified time: 2020-08-15 03:19:57
  */
 
 /*
  * 根据树形控件中的数据分析当前对应的绘图类型以及相关代码的生成
  */
-
 const typeCodes = (function() {
+    /**
+     * 保存net/mean/center对应绘制设置与否的公有变量
+     */
+    let hasNet, hasMean, hasCenter;
+    /**
+     * 保存的本地所有树结点数据的公用变量
+     */
+    let treeNodesData;
+
     /**
      * 组装注释信息并返回
      * 
@@ -17,15 +25,6 @@ const typeCodes = (function() {
      */
     function note(info) {
         return `# ${info}\n`;
-    }
-
-    /**
-     * 组装筛选规则并返回
-     * 
-     * @param {Array<String>} target 
-     */
-    function join(target) {
-        return target.map(v=>`[${v}]`).join('');
     }
 
     /**
@@ -52,14 +51,11 @@ const typeCodes = (function() {
 
     /**
      * 获取当前的类型信息与相关的数据内容并返回
-     * 
-     * @param {Array<Object>} treeNodesData
      */
-    function getTypeInfo(treeNodesData) {
-        const [hasNet, hasMean, hasCenter] = hasType(treeNodesData);
+    function getTypeInfo() {
+        [hasNet, hasMean, hasCenter] = hasType(treeNodesData);
         let type = '';
-        if ( !hasCenter ) type = 'nocenter';
-        else if (hasNet && hasMean) type = 'net_mean';
+        if (hasNet && hasMean) type = 'net_mean';
         else if (hasNet) type = 'net';
         else if (hasMean) type = 'mean';
         else type = 'center';  
@@ -67,183 +63,244 @@ const typeCodes = (function() {
     }
 
     /**
-     * 将对象转换为对应的R筛选规则字符串
+     * 将树结点对象转为规则对象并返回
      * 
      * @example
-     * {classID:1, gpID: 2, level: 2} => "classID==1", "gpID==2"
-     * @param {Boolean} init 是否为初始化使用的 - 是则加入classID
-     * @param {Array<String>} arr 修改的 Targets数组的子数组对象
-     * @param {Object} obj 目标数据对象(树结点数据)
-     * @param {Boolean} remove = false 是否是删除的筛选规则
+     * {floor:2,type:'gpID',value:'1',...}
+     *      =>
+     * {target: '[classID==1][gpID==1]', color:'#CCCCCC'}
+     * @param {Object} data 
+     * @param {Number} i 
      */
-    function transformRule(init, arr, obj, remove = false) {
-        const level = obj.level;
-        if (remove) {
-            if (level == 2) {
-                arr.push(`gpID!=${obj.gpID}`);
-            } else if (level == 3) {
-                arr.push(`!(gpID==${obj.gpID} & gpNO==${obj.gpNO})`);
-            }
-        } else {
-            if (init) arr.push(`classID==${obj.classID}`);
-            if (level >= 2) arr.push(`gpID==${obj.gpID}`);
-            if (level == 3) arr.push(`gpNO==${obj.gpNO}`);
+    function toRuleData(data, i) {
+        const ruleData = {
+            target: '',
+            color: data.color
+        };
+        let floor = data.floor;
+        const targets = [];
+        targets.push({
+            type: data.type,
+            value: data.value
+        });
+        // 将该结点的父级信息也加入数组
+        while(floor) {
+            floor--;
+            for (let pos = i - 1; pos >= 0; pos--) {
+                if (treeNodesData[pos].floor == floor) {
+                    targets.push({
+                        type: treeNodesData[pos].type,
+                        value: treeNodesData[pos].value
+                    });
+                    break;
+                }
+            } // end for
+        } // end while
+        for (let j = 0; j < targets.length; j++) {
+            targets[j] = `${targets[j].type}=='${targets[j].value}'`;
         }
+        ruleData.target = targets.reverse().map(v => `[${v}]`).join('');
+        return ruleData;
+    }
+
+    /**
+     * 将树结点对象中的center数据转为规则对象并返回
+     * 
+     * @param {Array<Object>} arr 复制的树节点数据数组
+     * @param {Number} i 当前处理的center目标的index
+     */
+    function toRuleCenterData(arr, i) {
+        const ruleData = {
+            target: '',
+            color: arr[i].color
+        };
+        let floor = arr[i].floor;
+        const targets = [];
+        targets.push(
+            `${arr[i].type}=='${arr[i].value}'`
+        );
+        // 处理其子节点中的非规则
+        let flag = i < arr.length - 1 && arr[i + 1].floor > floor; // 是否需要处理子节点
+        let bound = i + 1;
+        if (flag) {
+            // 更新边界为下一个同级节点位置
+            for (let j = i + 1; j < arr.length; j++) {
+                if (arr[j].floor <= floor) {
+                    bound = j;
+                    break;
+                }
+            } // end for
+            if (bound == i + 1) bound = arr.length;
+        } // end if
+
+        /**
+         * 返回pos位置对应的Center的“非”规则
+         * 
+         * @param {Number} pos 
+         */
+        function makeCenterRule(pos) {
+            let rule = [];
+            let floor = arr[pos].floor;
+            for (let j = pos; j >= i; j--) {
+                if (arr[j].floor == floor) {
+                    rule.push(
+                        `${arr[j].type}=='${arr[j].value}'`
+                    );
+                    floor--;
+                } // end if
+            } // end for
+            let content = rule.reverse().join(' & ');
+            return `!(${content})`;
+        }
+
+        /**
+         * 删除pos位置节点的子节点\
+         * 同时需要删除pos位置的节点本身
+         * 
+         * @param {Number} pos 
+         */
+        function adjustArr(pos) {
+            const floor = arr[pos].floor;
+            if (pos == arr.length - 1 || 
+                arr[pos + 1].floor <= floor) {
+                // 无后继节点下，只需删除节点本身
+                arr.splice(pos, 1);
+                bound--;
+                return;
+            }
+            let from = pos, num = 1;
+            for (let j = pos + 1; j < bound; j++) {
+                if (arr[j].floor > floor) {
+                    num++;
+                } else if (arr[j].floor == floor) {
+                    break;
+                }
+            }
+            arr.splice(from, num);
+            bound -= num;
+            return;
+        }
+
+        while(flag) { // 存在子树节点
+            floor++;
+            flag = false;
+            for (let j = i + 1; j < bound; j++) {
+                if (arr[j].floor == floor) {
+                    flag = true; // 存在子树结点
+                    if ( !arr[j]['check']['center'] ) {
+                        targets.push(makeCenterRule(j));
+                        adjustArr(j); // 删除该子节点及其后继子节点
+                        break;
+                    }
+                }
+            } // end for
+            for (let j = i + 1; j < bound; j++) {
+                // 是否还存在该级floor待处理的非规则
+                if (arr[j].floor == floor && 
+                    !arr[j]['check']['center']) {
+                    floor--;
+                    break;
+                }
+            } // end for
+        } // end while
+
+        arr.splice(i, bound - i);
+        ruleData.target = targets.map(v => `[${v}]`).join('');
+        return ruleData;
     }
 
     /**
      * 从树结点数据数组中过滤指定类型的数据对象并组成数组返回
      * 
-     * @param {Array<Object>} treeNodesData 
+     * @example
+     * [{
+     *      target: '[classID==1][gpID==2][userName=='XX']',
+     *      color: '#CCCCCC'
+     * }]
      * @param {String} type net/mean/center
      */
-    function filterTreeData(treeNodesData, type) {
+    function filterTreeData(type) {
         const filteredData = [];
-        treeNodesData.forEach(data => {
-            if (data['check'][type]) {
-                filteredData.push(data);
-            }
-        });
-        if (type === 'center') {
-            const filteredCenterData = [];
-            let classIDs = [];
-            filteredData.forEach(data => {
-                if (data.level == 1) {
-                    classIDs.push(data.classID);
-                    filteredCenterData.push(data);
-                    groupIDs = [];
-                } else if (data.level == 2) {
-                    if ( !~classIDs.indexOf(data.classID) ) {
-                        filteredCenterData.push(data);
-                    }
+        if (type !== 'center') {
+            treeNodesData.forEach( (data, i) => {
+                if (data['check'][type]) {
+                    filteredData.push(
+                        toRuleData(data, i)
+                    );
                 }
             });
-            return filteredCenterData;
+        } else {
+            const cloneData = [...treeNodesData];
+            let flag = true; // hasCenter
+            do {
+                flag = false;
+                for (let i = 0; i < cloneData.length; i++) {
+                    if (cloneData[i]['check']['center']) {
+                        flag = true;
+                        filteredData.push(
+                            toRuleCenterData(cloneData, i)
+                        );
+                        break;
+                    }
+                }
+            } while(flag);
         }
         return filteredData;
     }
 
     /**
-     * 从结点数据中进一步过滤规则
-     * 
-     * @param {Array<Object>} treeNodesData 
-     * @param {Array<String>} arr 
-     * @param {Object} obj 
-     */
-    function filterNodeData(treeNodesData, arr, obj) {
-        /**
-         * 过滤指定classID下的组，识别center的选中情况
-         * 
-         * @param {Array<String>} arr
-         * @param {Array<Object>} treeNodesData 
-         * @param {String} classID 
-         */
-        function filterGroups(arr, treeNodesData, classID) {
-            // center 为true的group加入，准备进一步筛选members
-            let groups = [];
-            treeNodesData.forEach(data => {
-                if (data.level == 2 && data.classID == classID) {
-                    if (data['check']['center']) groups.push(data);
-                    else transformRule(false, arr, data, true);
-                }
-            });
-            // 进一步筛选groups下的members
-            groups.forEach(group => {
-                filterMembers(arr, treeNodesData, group.classID, group.gpID); 
-            });
-        }
-
-        /**
-         * 过滤指定classID，gpID下的成员，识别center的选中情况
-         * 
-         * @param {Array<String>} arr 
-         * @param {Array<Object>} treeNodesData 
-         * @param {String} classID 
-         * @param {String} gpID 
-         */
-        function filterMembers(arr, treeNodesData, classID, gpID) {
-            treeNodesData.forEach(data => {
-                if (data.level == 3 && 
-                    data.classID == classID && data.gpID == gpID) {
-                    if ( !data['check']['center'] ) transformRule(false, arr, data, true);
-                }
-            });
-        }
-
-        if (obj.level == 1) {
-            filterGroups(arr, treeNodesData, obj.classID);
-        } else if (obj.level == 2) {
-            filterMembers(arr, treeNodesData, obj.classID, obj.gpID);
-        }
-    }
-
-    /**
      * 获取目标对象的数组数据
      * 
-     * @param {Array<Object>} treeNodesData
      * @param {String} type
      */
-    function getTargets(treeNodesData, type) {
-        const targets = [];
-        targets.colors = [];
-        switch (type) {
+    function getTargets(type) {
+        let [targets, centers] = [[], []];
+        switch(type) {
             case 'mean':
             case 'net':
             case 'center':
-                let datas = filterTreeData(treeNodesData, type);
-                datas.forEach(data => {
-                    let arr = [];
-                    transformRule(true, arr, data);
-                    filterNodeData(treeNodesData, arr, data);
-                    targets.push(arr);
-                    targets.colors.push(data.color);
-                });
+                targets = filterTreeData(type);
                 break;
             case 'net_mean':
-                let net_datas = filterTreeData(treeNodesData, 'net'),
-                    mean_datas = filterTreeData(treeNodesData, 'mean');
-                targets.push([], []);
-                targets.colors.push([], []);
-                net_datas.forEach(data => {
-                    let arr = [];
-                    transformRule(true, arr, data);
-                    filterNodeData(treeNodesData, arr, data);
-                    targets[0].push(arr);
-                    targets.colors[0].push(data.color);
-                });
-                mean_datas.forEach(data => {
-                    let arr = [];
-                    transformRule(true, arr, data);
-                    filterNodeData(treeNodesData, arr, data);
-                    targets[1].push(arr);
-                    targets.colors[1].push(data.color);
-                });
+                targets = [[], []];
+                targets[0] = filterTreeData('net');
+                targets[1] = filterTreeData('mean');
                 break;
         }
-        return targets;
-    } 
+        if (hasCenter && type !== 'center') {
+            centers = filterTreeData('center');
+        }
+        return [targets, centers];
+    }
 
     /**
      * 组装代码部分的质心设置\
      * 注意当type为net_mean时处理不同
      * 
      * @param {Array<Array<String>>} targets 
+     * @param {Array<Array<String>>} centers 
      * @param {String} type 
      */
-    function pointsCodes(targets, type) {
+    function pointsCodes(targets, centers, type) {
         let codes = note('绘制各个分析单位的质心');
         if (type !== 'net_mean') {
+            // net or mean
             targets.forEach( (target, index) => {
-                codes += `target${index+1}.points = as.matrix(set$points${join(target)})\n`;
+                codes += `target${index+1}.points = as.matrix(set$points${target.target})\n`;
             });
         } else {
             // net 对应的数据
             targets[0].forEach( (target, index) => {
-                codes += `target0${index+1}.points = as.matrix(set$points${join(target)})\n`;
+                codes += `target0${index+1}.points = as.matrix(set$points${target.target})\n`;
             });
             // mean 对应的数据
             targets[1].forEach( (target, index) => {
-                codes += `target1${index+1}.points = as.matrix(set$points${join(target)})\n`;
+                codes += `target1${index+1}.points = as.matrix(set$points${target.target})\n`;
+            });
+        }
+        if (hasCenter && type !== 'center') {
+            centers.forEach( (center, index) => {
+                codes += `center${index+1}.points = as.matrix(set$points${center.target})\n`;
             });
         }
         codes += '\n';
@@ -258,11 +315,10 @@ const typeCodes = (function() {
      */
     function edgeCodes(targets, type) {
         if (type !== 'net' && type !== 'net_mean') return '';
-        console.log(type);
         let codes = note('网络图所有边的权重');
         if (type === 'net') {
             targets.forEach( (target, index) => {
-                codes += `target${index+1}.lineweights = as.matrix(set$line.weights${join(target)})\n`;
+                codes += `target${index+1}.lineweights = as.matrix(set$line.weights${target.target})\n`;
             });
             codes += '\n' + note('计算所有分析单位在每条边的平均权重');
             targets.forEach( (_, index) => {
@@ -274,7 +330,7 @@ const typeCodes = (function() {
             }
         } else if (type === 'net_mean') {
             targets[0].forEach( (target, index) => {
-                codes += `target0${index+1}.lineweights = as.matrix(set$line.weights${join(target)})\n`;
+                codes += `target0${index+1}.lineweights = as.matrix(set$line.weights${target.target})\n`;
             });
             codes += '\n' + note('计算所有分析单位在每条边的平均权重');
             targets[0].forEach( (_, index) => {
@@ -293,69 +349,87 @@ const typeCodes = (function() {
      * 组装代码中关于具体的绘图设置的代码
      * 
      * @param {Array<Array<String>>} targets
+     * @param {Array<Array<String>>} centers 
      * @param {String} type 
      */
-    function plotCodes(targets, type) {
+    function plotCodes(targets, centers, type) {
         const title = $('#plotTitle').val() || $('#plotTitle').attr('placeholder');
         let rules = [];
         let codes = (type === 'net' || type === 'net_mean') ?
-            `enaplot = ena.plot(set, title = "${title}")  %>%\n`:
-            `enaplot = ena.plot(set, scale.to = "points", title = "${title}")  %>%\n`;
+            `enaplot = ena.plot(set, font.size=15, title = "${title}")  %>%\n`:
+            `enaplot = ena.plot(set, font.size=15, scale.to = "points", title = "${title}")  %>%\n`;
+
+        /**
+         * 根据centers数组去修改rules
+         */
+        function addCentersRule() {
+            if (hasCenter && type !== 'center') {
+                centers.forEach( (center, index) => {
+                    rules.push(`  ena.plot.points(points = center${index+1
+                        }.points, colors = c("${center.color}")) `);
+                });
+            }
+        }
+        
         switch (type) {
             case 'center':
-                targets.forEach( (_, index) => {
-                    rules.push(`  ena.plot.points(points = target${index+1}.points, colors = c("${targets.colors[index]}")) `);
+                targets.forEach( (target, index) => {
+                    rules.push(`  ena.plot.points(points = target${index+1}.points, colors = c("${target.color}")) `);
                 });
                 codes += rules.join('%>%\n');
                 codes += '\n';
                 break;
             case 'mean':
-                targets.forEach( (_, index) => {
-                    rules.push(`  ena.plot.points(points = target${index+1
-                        }.points, confidence.interval = "box", colors = c("${targets.colors[index]}")) `);
+                targets.forEach( (target, index) => {
                     rules.push(`  ena.plot.group(point = target${index+1
-                        }.points, colors = c("${targets.colors[index]}"), confidence.interval = "box") `);
+                        }.points, colors = c("${target.color}"), confidence.interval = "box") `);
                 });
+                addCentersRule();
                 codes += rules.join('%>%\n');
                 codes += '\n';
                 break;
             case 'net':
                 if (targets.length == 1) {
-                    codes += `  ena.plot.points(points = target1.points, colors = c("${targets.colors[0]}")) %>%`;
-                    codes += `  ena.plot.network(network = target1.mean, colors = c("${targets.colors[0]}"))\n`;
+                    rules.push(`  ena.plot.network(network = target1.mean, colors = c("${targets[0].color}"))`);
                 } else {
-                    codes += `  ena.plot.points(points = target1.points, colors = c("${targets.colors[0]}")) %>%`;
-                    codes += `  ena.plot.points(points = target2.points, colors = c("${targets.colors[1]}")) %>%`;
-                    codes += `  ena.plot.network(network = subtracted.mean *8, colors = c("${targets.colors[0]}","${targets.colors[0]}"))\n`;
+                    console.log('net - subtracted!');
+                    rules.push(`  ena.plot.network(network = subtracted.mean *8, colors = c("${
+                        targets[0].color}","${targets[1].color}"))`);
                 }
+                addCentersRule();
+                codes += rules.join('%>%\n');
+                codes += '\n';
                 break;
             case 'net_mean':
-                targets[1].forEach( (_, index) => {
-                    rules.push(`  ena.plot.points(points = target1${index+1
-                        }.points, confidence.interval = "box", colors = c("${targets.colors[1][index]}")) `);
+                targets[1].forEach( (target, index) => {
                     rules.push(`  ena.plot.group(point = target1${index+1
-                        }.points, colors = c("${targets.colors[1][index]}"), confidence.interval = "box") `);
+                        }.points, colors = c("${target.color}"), confidence.interval = "box") `);
                 });
+                addCentersRule();
                 codes += rules.join('%>%\n');
                 codes += '%>%\n';
                 if (targets[0].length == 1) {
-                    codes += `  ena.plot.network(network = target01.mean, colors = c("${targets.colors[0][0]}"))`;
+                    codes += `  ena.plot.network(network = target01.mean, colors = c("${targets[0][0].color}"))`;
                 } else {
-                    codes += `  ena.plot.network(network = subtracted.mean *8, colors = c("${targets.colors[0][0]}","${targets.colors[0][1]}"))`;
+                    codes += `  ena.plot.network(network = subtracted.mean *8, colors = c("${targets[0][0].color}","${targets[0][1].color}"))`;
                 }
                 break;
         }
+
         return codes;
     }
 
+    /**
+     * 组装并返回具体的绘图代码
+     */
     function typeCodes() {
-        const treeNodesData = getAllTreeNodesData( $tree );
-        const type = getTypeInfo(treeNodesData);
-        const targets = getTargets(treeNodesData, type);
+        treeNodesData = getAllTreeNodesData();
+        const type = getTypeInfo();
+        const [targets, centers] = getTargets(type);
         let str = '';
-        str += pointsCodes(targets, type);
+        str += pointsCodes(targets, centers, type);
         str += edgeCodes(targets, type);
-        str += plotCodes(targets, type);
+        str += plotCodes(targets, centers, type);
         return str;
     }
 
